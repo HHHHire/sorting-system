@@ -34,5 +34,7 @@ public class InventoryServiceImpl implements InventoryService {
         return inventoryRepository.findByEnterpriseIdAndCategoryId(enterpriseId, categoryId).orElse(null);
     }
 
-    public Integer updateInventory(String enterpriseId, String categoryId, )
+    public Integer updateInventory(String enterpriseId, String categoryId, Integer counts){
+        return null;
+    }
 }
