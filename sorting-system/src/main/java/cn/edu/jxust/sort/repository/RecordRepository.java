@@ -23,9 +23,10 @@ public interface RecordRepository extends JpaRepository<Record, String> {
      * @param start        开始时间
      * @param end          结束时间
      * @param enterpriseId 企业 id
+     * @param pageable     分页信息
      * @return Page<Record>
      */
-    Page<Record> findByCreateTimeBetweenAndEnterpriseIdOrderByCreateTimeDesc(Long start, Long end, String enterpriseId);
+    Page<Record> findByCreateTimeBetweenAndEnterpriseIdOrderByCreateTimeDesc(Long start, Long end, String enterpriseId, Pageable pageable);
 
     /**
      * 通过时间和分类编号查询记录
@@ -34,9 +35,10 @@ public interface RecordRepository extends JpaRepository<Record, String> {
      * @param end          结束时间
      * @param enterpriseId 企业 id
      * @param categoryId   分类编号
+     * @param pageable     分页信息
      * @return Page<Record>
      */
-    Page<Record> findByCreateTimeBetweenAndEnterpriseIdAndCategoryIdOrderByCreateTimeDesc(Long start, Long end, String enterpriseId, String categoryId);
+    Page<Record> findByCreateTimeBetweenAndEnterpriseIdAndCategoryIdOrderByCreateTimeDesc(Long start, Long end, String enterpriseId, String categoryId, Pageable pageable);
 
     /**
      * 查询出库记录
