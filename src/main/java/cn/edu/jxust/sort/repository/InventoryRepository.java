@@ -39,6 +39,15 @@ public interface InventoryRepository extends JpaRepository<Inventory, String> {
     Optional<Inventory> findByEnterpriseIdAndCategoryId(String enterpriseId, String categoryId);
 
     /**
+     * 通过分类名称查询库存
+     *
+     * @param enterpriseId 企业 id
+     * @param categoryName 分类名称
+     * @return Optional<Inventory>
+     */
+    Optional<Inventory> findByEnterpriseIdAndCategoryName(String enterpriseId, String categoryName);
+
+    /**
      * 更新库存
      *
      * @param enterpriseId 企业 id

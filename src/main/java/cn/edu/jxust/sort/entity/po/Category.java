@@ -44,7 +44,7 @@ public class Category implements Serializable {
      * 长度
      */
     @Column(columnDefinition = "decimal(10,4) comment '长度'")
-    private BigDecimal length;
+    private BigDecimal cLength;
     /**
      * 长度公差
      */

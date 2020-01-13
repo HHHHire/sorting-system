@@ -34,6 +34,11 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    public Inventory getInventoryByCategoryName(String enterpriseId, String categoryName) {
+        return null;
+    }
+
+    @Override
     public Integer updateInventory(String enterpriseId, String categoryId, Integer counts){
         Integer count = inventoryRepository.findCounts(enterpriseId, categoryId);
         if (count != null) {

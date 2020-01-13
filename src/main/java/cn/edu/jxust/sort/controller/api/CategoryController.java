@@ -54,7 +54,7 @@ public class CategoryController extends BaseController {
                     categories.map(c -> CategoryVO.builder()
                             .categoryId(c.getCategoryId())
                             .categoryName(c.getCategoryName())
-                            .length(c.getLength())
+                            .length(c.getCLength())
                             .lengthTolerance(c.getLengthTolerance())
                             .weight(c.getWeight())
                             .weightTolerance(c.getWeightTolerance()).build()));

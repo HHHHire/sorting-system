@@ -32,6 +32,15 @@ public interface InventoryService {
     Inventory getInventoryByCategoryId(String enterpriseId, String categoryId);
 
     /**
+     * 通过分类名称获取库存信息
+     *
+     * @param enterpriseId 企业 id
+     * @param categoryName 分类名称
+     * @return Inventory
+     */
+    Inventory getInventoryByCategoryName(String enterpriseId, String categoryName);
+
+    /**
      * 更新库存
      *
      * @param enterpriseId 企业 id

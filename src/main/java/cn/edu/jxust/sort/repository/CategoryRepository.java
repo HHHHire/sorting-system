@@ -4,6 +4,9 @@ import cn.edu.jxust.sort.entity.po.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author: ddh
@@ -39,4 +42,20 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
      * @return Category
      */
     Category findByEnterpriseIdAndCategoryId(String enterpriseId, String categoryId);
+
+    @Modifying
+    @Query(value = "update ss_category set " +
+            "category_name=:#{#category.categoryName}, " +
+            "clength=:#{#category.cLength}, " +
+            "length_tolerance=:#{#category.lengthTolerance}, " +
+            "weight=:#{#category.weight}, " +
+            "weight_tolerance=:#{#category.weightTolerance}, " +
+            "enterprise_id=:#{#category.enterpriseId}, " +
+            "device_id=:#{#category.deviceId} " +
+            "where category_id=:#{#category.categoryId}")
+    Integer updateCategory(Category category);
+
+    @Modifying
+    @Transactional(rollbackFor = Exception.class)
+    Integer deleteByCategoryId(String categoryId);
 }

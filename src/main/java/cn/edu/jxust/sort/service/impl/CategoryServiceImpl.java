@@ -36,4 +36,19 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getCategoryById(String enterpriseId, String categoryId) {
         return categoryRepository.findByEnterpriseIdAndCategoryId(enterpriseId, categoryId);
     }
+
+    @Override
+    public Integer updateCategory(Category category) {
+        return categoryRepository.updateCategory(category);
+    }
+
+    @Override
+    public Category createCategory(Category category) {
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public Integer deleteCategory(String categoryId) {
+        return categoryRepository.deleteByCategoryId(categoryId);
+    }
 }

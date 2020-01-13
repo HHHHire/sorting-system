@@ -30,4 +30,28 @@ public interface CategoryService {
      * @return Category
      */
     Category getCategoryById(String enterpriseId, String categoryId);
+
+    /**
+     * 修改分类
+     *
+     * @param category 分类实体
+     * @return Integer
+     */
+    Integer updateCategory(Category category);
+
+    /**
+     * 创建分类
+     *
+     * @param category 分类实体
+     * @return Category
+     */
+    Category createCategory(Category category);
+
+    /**
+     * 通过分类编号删除分类信息
+     *
+     * @param categoryId 分类编号
+     * @return Integer
+     */
+    Integer deleteCategory(String categoryId);
 }
