@@ -30,9 +30,9 @@ public class RecordServiceImpl implements RecordService {
         Long start = analyticalStartTime(startTime);
         Long end = analyticalEndTime(endTime);
         if (categoryId == null) {
-            return recordRepository.findByCreateTimeBetweenAndEnterpriseIdOrderByCreateTimeDesc(start, end, enterpriseId);
+            return recordRepository.findByCreateTimeBetweenAndEnterpriseIdOrderByCreateTimeDesc(start, end, enterpriseId, pageable);
         } else {
-            return recordRepository.findByCreateTimeBetweenAndEnterpriseIdAndCategoryIdOrderByCreateTimeDesc(start, end, enterpriseId, categoryId);
+            return recordRepository.findByCreateTimeBetweenAndEnterpriseIdAndCategoryIdOrderByCreateTimeDesc(start, end, enterpriseId, categoryId, pageable);
         }
     }
 
@@ -51,8 +51,7 @@ public class RecordServiceImpl implements RecordService {
         return recordRepository.findOutRecordByEmployeeCard(enterpriseId, employeeCard);
     }
 
-
-
+    /* ---------------------- 内部私有方法 --------------------------- */
 
     private Long analyticalStartTime(String startTime) {
         if (startTime == null) {

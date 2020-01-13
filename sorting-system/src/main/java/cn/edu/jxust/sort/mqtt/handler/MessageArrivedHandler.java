@@ -1,18 +1,8 @@
 package cn.edu.jxust.sort.mqtt.handler;
 
-import cn.edu.jxust.sort.entity.po.Device;
-import cn.edu.jxust.sort.repository.CategoryRepository;
-import cn.edu.jxust.sort.repository.DeviceRepository;
-import cn.edu.jxust.sort.repository.RecordRepository;
-import cn.edu.jxust.sort.util.UUIDUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 
 /**
  * @author yuanweimin
@@ -23,17 +13,6 @@ import java.math.BigDecimal;
 @Component
 @Scope("prototype")
 public class MessageArrivedHandler implements MessageHandler {
-
-    private final DeviceRepository deviceRepository;
-    private final RecordRepository recordRepository;
-    private final CategoryRepository categoryRepository;
-
-    @Autowired
-    public MessageArrivedHandler(DeviceRepository deviceRepository, RecordRepository recordRepository, CategoryRepository categoryRepository) {
-        this.deviceRepository = deviceRepository;
-        this.recordRepository = recordRepository;
-        this.categoryRepository = categoryRepository;
-    }
 
     @Override
     public void handle(Long msgId, String msgBody) {
@@ -46,12 +25,6 @@ public class MessageArrivedHandler implements MessageHandler {
 //        }
     }
 
-    /**
-     * 将数据解析成 BusBarVO 实体
-     *
-     * @param content 数据字符串
-     * @return BusBarVO
-     */
     /*private Copper parseData(String content) {
         JSONObject object = JSON.parseObject(content);
         JSONObject app = object.getJSONObject("appProperty");

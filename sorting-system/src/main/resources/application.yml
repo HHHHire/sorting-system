@@ -9,7 +9,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/sorting?useSSL=false&serverTimezone=GMT%2b8&characterEncoding=UTF-8
     username: root
-    password: 123456
+    password: 20171109
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   thymeleaf:
@@ -19,7 +19,7 @@ spring:
     encoding: utf-8
     servlet:
       content-type: text/html
-    mode: HTML5
+    mode: HTML
 
 server:
   port: 8080
