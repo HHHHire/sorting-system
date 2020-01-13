@@ -1,9 +1,0 @@
-HELP.md
-/target/
-/.idea
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
