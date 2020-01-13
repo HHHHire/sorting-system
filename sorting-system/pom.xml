@@ -26,7 +26,7 @@
         <swagger2markup.version>1.3.1</swagger2markup.version>
         <nekohtml.version>1.9.6.2</nekohtml.version>
         <okhttp.version>3.14.0</okhttp.version>
-        <mqttv3.version>1.2.0</mqttv3.version>
+        <mqttv3.version>1.2.1</mqttv3.version>
         <protobuf.version>3.7.0</protobuf.version>
         <bcprov-jdk15.version>140</bcprov-jdk15.version>
     </properties>
