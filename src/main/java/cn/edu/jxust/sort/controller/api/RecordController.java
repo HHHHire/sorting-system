@@ -5,6 +5,7 @@ import cn.edu.jxust.sort.entity.po.Category;
 import cn.edu.jxust.sort.entity.po.Record;
 import cn.edu.jxust.sort.entity.vo.RecordVO;
 import cn.edu.jxust.sort.service.CategoryService;
+import cn.edu.jxust.sort.service.InventoryService;
 import cn.edu.jxust.sort.service.RecordService;
 import cn.edu.jxust.sort.util.ResponseUtil;
 import cn.edu.jxust.sort.util.TokenUtil;
@@ -30,12 +31,14 @@ public class RecordController {
     private final RecordService recordService;
     private final TokenUtil tokenUtil;
     private final CategoryService categoryService;
+    private final InventoryService inventoryService;
 
     @Autowired
-    public RecordController(RecordService recordService, TokenUtil tokenUtil, CategoryService categoryService) {
+    public RecordController(RecordService recordService, TokenUtil tokenUtil, CategoryService categoryService, InventoryService inventoryService) {
         this.recordService = recordService;
         this.tokenUtil = tokenUtil;
         this.categoryService = categoryService;
+        this.inventoryService = inventoryService;
     }
 
     /**
@@ -99,12 +102,24 @@ public class RecordController {
                 .employeeCard(employeeCard)
                 .build());
         if (record != null) {
-            return ResponseUtil.responseWithoutData(ResponseStatus.SUCCESS);
+            Integer i = inventoryService.updateInventory(enterpriseId, categoryId, outCounts > 0 ? -outCounts : outCounts);
+            if (i != null && i > 0) {
+                return ResponseUtil.responseWithoutData(ResponseStatus.SUCCESS);
+            } else {
+                return ResponseUtil.responseWithoutData(ResponseStatus.FAILED);
+            }
         } else {
             return ResponseUtil.responseWithoutData(ResponseStatus.FAILED);
         }
     }
 
+    /**
+     * 通过员工卡号查看出库记录
+     *
+     * @param token        用户 token
+     * @param employeeCard 用户卡号
+     * @return Response
+     */
     @GetMapping("/out/{employeeCard}")
     public Response getOutRecordByCard(@RequestHeader("token") String token,
                                        @PathVariable String employeeCard) {
@@ -117,6 +132,12 @@ public class RecordController {
         }
     }
 
+    /**
+     * 查看出库记录
+     *
+     * @param token 用户 token
+     * @return Response
+     */
     @GetMapping("/out")
     public Response getOutRecord(@RequestHeader("token") String token) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();

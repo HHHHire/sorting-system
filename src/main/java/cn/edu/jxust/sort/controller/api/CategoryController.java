@@ -63,6 +63,13 @@ public class CategoryController extends BaseController {
         }
     }
 
+    /**
+     * 通过分类编号获取分类信息
+     *
+     * @param token      用户 token
+     * @param categoryId 分类编号
+     * @return Response
+     */
     @GetMapping("/{categoryId}")
     public Response getCategoryById(@RequestHeader("token") String token,
                                     @PathVariable String categoryId) {

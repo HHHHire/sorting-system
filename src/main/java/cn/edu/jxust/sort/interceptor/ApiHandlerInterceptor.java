@@ -1,6 +1,6 @@
 package cn.edu.jxust.sort.interceptor;
 
-import cn.edu.jxust.sort.service.TokenSerivce;
+import cn.edu.jxust.sort.service.TokenService;
 import cn.edu.jxust.sort.util.ResponseUtil;
 import cn.edu.jxust.sort.util.TokenUtil;
 import cn.edu.jxust.sort.util.annotations.RequiredPermission;
@@ -24,12 +24,12 @@ import java.io.IOException;
 @Component
 public class ApiHandlerInterceptor implements HandlerInterceptor {
 
-    private final TokenSerivce tokenSerivce;
+    private final TokenService tokenService;
     private final TokenUtil tokenUtil;
 
     @Autowired
-    public ApiHandlerInterceptor(TokenSerivce tokenSerivce, TokenUtil tokenUtil) {
-        this.tokenSerivce = tokenSerivce;
+    public ApiHandlerInterceptor(TokenService tokenService, TokenUtil tokenUtil) {
+        this.tokenService = tokenService;
         this.tokenUtil = tokenUtil;
     }
 
@@ -40,7 +40,7 @@ public class ApiHandlerInterceptor implements HandlerInterceptor {
             RequiredPermission annotation = method.getMethod().getAnnotation(RequiredPermission.class);
             if (annotation != null) {
                 String token = request.getHeader("token");
-                if (tokenUtil.isValid(token) && tokenSerivce.isExist(token)) {
+                if (tokenUtil.isValid(token) && tokenService.isExist(token)) {
                     return true;
                 } else {
                     setResponse(response, ResponseUtil.responseWithoutData(ResponseStatus.VISITED_FORBID));

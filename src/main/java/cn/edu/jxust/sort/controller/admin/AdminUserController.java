@@ -7,7 +7,7 @@ import cn.edu.jxust.sort.entity.vo.UserInfoVO;
 import cn.edu.jxust.sort.entity.vo.UserRegisterVO;
 import cn.edu.jxust.sort.service.AccountService;
 import cn.edu.jxust.sort.service.EnterpriseService;
-import cn.edu.jxust.sort.service.TokenSerivce;
+import cn.edu.jxust.sort.service.TokenService;
 import cn.edu.jxust.sort.service.UserService;
 import cn.edu.jxust.sort.util.*;
 import cn.edu.jxust.sort.util.common.Const;
@@ -28,23 +28,23 @@ import java.util.List;
 /**
  * @author: ddh
  * @data: 2020/1/5 20:56
- * @description
+ * @description admin user controller
  **/
 @RestController
 @RequestMapping("/admin/user")
 public class AdminUserController {
     private final TokenUtil tokenUtil;
     private final UserService userService;
-    private final TokenSerivce tokenSerivce;
+    private final TokenService tokenService;
     private final AccountService accountService;
     private final EnterpriseService enterpriseService;
 
-    public AdminUserController(TokenUtil tokenUtil, UserService userService, EnterpriseService enterpriseService, AccountService accountService, TokenSerivce tokenSerivce) {
+    public AdminUserController(TokenUtil tokenUtil, UserService userService, EnterpriseService enterpriseService, AccountService accountService, TokenService tokenService) {
         this.tokenUtil = tokenUtil;
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.accountService = accountService;
-        this.tokenSerivce = tokenSerivce;
+        this.tokenService = tokenService;
     }
 
     /**
@@ -82,7 +82,7 @@ public class AdminUserController {
                             .createTime(System.currentTimeMillis())
                             .updateTime(System.currentTimeMillis())
                             .build());
-                    tokenSerivce.createToken(Token.builder()
+                    tokenService.createToken(Token.builder()
                             .userId(userId)
                             .userToken(tokenUtil.createJwt(MapUtil.create(
                                     "userId", userId,
@@ -140,7 +140,7 @@ public class AdminUserController {
         if (admin == null) {
             return ResponseUtil.responseWithoutData(ResponseStatus.NEED_LOGIN);
         } else {
-            Token token = tokenSerivce.getTokenById(userId);
+            Token token = tokenService.getTokenById(userId);
             if (token == null) {
                 return ResponseUtil.responseWithoutData(ResponseStatus.FAILED);
             }
@@ -226,7 +226,7 @@ public class AdminUserController {
         } else {
             try {
                 userService.deleteUserByUserId(userId);
-                tokenSerivce.deleteTokenByUserId(userId);
+                tokenService.deleteTokenByUserId(userId);
                 accountService.deleteAccountByUserId(userId);
                 return ResponseUtil.responseWithoutData(ResponseStatus.SUCCESS);
             } catch (Exception e) {

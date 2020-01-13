@@ -23,7 +23,6 @@ public class InventoryServiceImpl implements InventoryService {
         this.inventoryRepository = inventoryRepository;
     }
 
-
     @Override
     public Page<Inventory> getInventory(String enterpriseId, Pageable pageable) {
         return inventoryRepository.findByEnterpriseId(enterpriseId, pageable);
@@ -34,7 +33,13 @@ public class InventoryServiceImpl implements InventoryService {
         return inventoryRepository.findByEnterpriseIdAndCategoryId(enterpriseId, categoryId).orElse(null);
     }
 
+    @Override
     public Integer updateInventory(String enterpriseId, String categoryId, Integer counts){
-        return null;
+        Integer count = inventoryRepository.findCounts(enterpriseId, categoryId);
+        if (count != null) {
+            return inventoryRepository.updateInventory(enterpriseId, categoryId, count + counts);
+        } else {
+            return null;
+        }
     }
 }

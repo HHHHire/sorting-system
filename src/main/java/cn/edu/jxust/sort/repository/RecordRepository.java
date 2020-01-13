@@ -12,18 +12,48 @@ import java.util.List;
 /**
  * @author: ddh
  * @data: 2020/1/8 15:29
- * @description
+ * @description record 持久化
  **/
 public interface RecordRepository extends JpaRepository<Record, String> {
     Page<Record> findAllByEnterpriseId(String enterpriseId, Pageable pageable);
 
+    /**
+     * 通过时间查询记录
+     *
+     * @param start        开始时间
+     * @param end          结束时间
+     * @param enterpriseId 企业 id
+     * @return Page<Record>
+     */
     Page<Record> findByCreateTimeBetweenAndEnterpriseIdOrderByCreateTimeDesc(Long start, Long end, String enterpriseId);
 
+    /**
+     * 通过时间和分类编号查询记录
+     *
+     * @param start        开始时间
+     * @param end          结束时间
+     * @param enterpriseId 企业 id
+     * @param categoryId   分类编号
+     * @return Page<Record>
+     */
     Page<Record> findByCreateTimeBetweenAndEnterpriseIdAndCategoryIdOrderByCreateTimeDesc(Long start, Long end, String enterpriseId, String categoryId);
 
+    /**
+     * 查询出库记录
+     *
+     * @param enterpriseId 企业 id
+     * @return List<Record>
+     */
     @Query(value = "select * from ss_record sr where sr.enterprise_id = ?1 and sr.counts < 0 order by sr.create_time desc", nativeQuery = true)
     List<Record> findOutRecord(String enterpriseId);
 
+    /**
+     * 通过员工卡号查询记录
+     *
+     * @param enterpriseId 企业 id
+     * @param employeeCard 员工卡号
+     * @return List<Record>
+     */
     @Query(value = "select * from ss_record sr where sr.enterprise_id = ?1 and sr.employee_card = ?2 and sr.counts < 0 order by sr.create_time desc", nativeQuery = true)
     List<Record> findOutRecordByEmployeeCard(String enterpriseId, String employeeCard);
 }

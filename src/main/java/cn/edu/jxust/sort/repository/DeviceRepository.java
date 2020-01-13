@@ -10,15 +10,35 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @author: ddh
  * @data: 2020/1/3 9:36
- * @description
+ * @description device 持久化
  **/
 public interface DeviceRepository extends JpaRepository<Device, String> {
+
+    /**
+     * 通过企业 id 删除设备信息
+     *
+     * @param enterpriseId 企业 id
+     * @return Integer
+     */
     @Modifying
     @Transactional(rollbackFor = Exception.class)
     Integer deleteByEnterpriseId(String enterpriseId);
 
+    /**
+     * 分页查询所有设备信息
+     *
+     * @param enterpriseId 企业 id
+     * @param pageable     分页信息
+     * @return Page<Device>
+     */
     Page<Device> findAllByEnterpriseId(String enterpriseId, Pageable pageable);
 
+    /**
+     * 通过设备 id 删除设备信息
+     *
+     * @param deviceId 设备 id
+     * @return Integer
+     */
     @Modifying
     @Transactional(rollbackFor = Exception.class)
     Integer deleteByDeviceId(String deviceId);

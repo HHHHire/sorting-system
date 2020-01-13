@@ -4,7 +4,7 @@ import cn.edu.jxust.sort.entity.po.Account;
 import cn.edu.jxust.sort.entity.po.Token;
 import cn.edu.jxust.sort.entity.vo.UserVO;
 import cn.edu.jxust.sort.service.AccountService;
-import cn.edu.jxust.sort.service.TokenSerivce;
+import cn.edu.jxust.sort.service.TokenService;
 import cn.edu.jxust.sort.util.EncryptionUtil;
 import cn.edu.jxust.sort.util.ResponseUtil;
 import cn.edu.jxust.sort.util.enums.ResponseStatus;
@@ -27,12 +27,12 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/account")
 public class AccountController extends BaseController {
-    private final TokenSerivce tokenSerivce;
+    private final TokenService tokenService;
     private final AccountService accountService;
 
     @Autowired
-    public AccountController(TokenSerivce tokenSerivce, AccountService accountService) {
-        this.tokenSerivce = tokenSerivce;
+    public AccountController(TokenService tokenService, AccountService accountService) {
+        this.tokenService = tokenService;
         this.accountService = accountService;
     }
 
@@ -50,7 +50,7 @@ public class AccountController extends BaseController {
         } else {
             Account login = accountService.getLogin(userVO.getUserName(), EncryptionUtil.encrypt(userVO.getUserPwd()));
             if (login != null) {
-                Token token = tokenSerivce.getTokenById(login.getUserId());
+                Token token = tokenService.getTokenById(login.getUserId());
                 return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, token);
             } else {
                 return ResponseUtil.responseWithoutData(ResponseStatus.FAILED, "用户名或密码错误");

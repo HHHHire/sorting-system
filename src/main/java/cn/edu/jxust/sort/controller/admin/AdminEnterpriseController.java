@@ -25,7 +25,7 @@ import javax.validation.Valid;
 /**
  * @author: ddh
  * @data: 2020/1/4 20:07
- * @description
+ * @description admin enterprise controller
  **/
 @Slf4j
 @RestController

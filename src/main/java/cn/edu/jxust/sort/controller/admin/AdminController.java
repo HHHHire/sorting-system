@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * @author: ddh
  * @data: 2020/1/3 14:40
- * @description
+ * @description admin controller
  **/
 @RestController
 @RequestMapping("/admin")
@@ -106,7 +106,7 @@ public class AdminController {
     }
 
     /**
-     * 创建管理员
+     * 修改管理员信息
      *
      * @param registerVO 管理员实体
      * @param result     参数校验结果

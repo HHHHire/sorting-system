@@ -22,7 +22,7 @@ import javax.validation.Valid;
 /**
  * @author: ddh
  * @data: 2020/1/3 11:23
- * @description
+ * @description admin account controller
  **/
 @RestController
 @RequestMapping("/admin/account")

@@ -2,7 +2,7 @@ package cn.edu.jxust.sort.service.impl;
 
 import cn.edu.jxust.sort.entity.po.Token;
 import cn.edu.jxust.sort.repository.TokenRepository;
-import cn.edu.jxust.sort.service.TokenSerivce;
+import cn.edu.jxust.sort.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import java.util.Optional;
  * @description
  **/
 @Service
-public class TokenServiceImpl implements TokenSerivce {
+public class TokenServiceImpl implements TokenService {
     private final TokenRepository tokenRepository;
 
     @Autowired
@@ -39,7 +39,6 @@ public class TokenServiceImpl implements TokenSerivce {
 
     @Override
     public boolean isExist(String token) {
-        Optional<Token> token1 = tokenRepository.findByUserToken(token);
-        return token1.isPresent();
+        return tokenRepository.findByUserToken(token).isPresent();
     }
 }

@@ -5,7 +5,7 @@ import cn.edu.jxust.sort.entity.po.Token;
 import cn.edu.jxust.sort.entity.po.User;
 import cn.edu.jxust.sort.entity.vo.UserInfoVO;
 import cn.edu.jxust.sort.service.EnterpriseService;
-import cn.edu.jxust.sort.service.TokenSerivce;
+import cn.edu.jxust.sort.service.TokenService;
 import cn.edu.jxust.sort.service.UserService;
 import cn.edu.jxust.sort.util.ResponseUtil;
 import cn.edu.jxust.sort.util.TokenUtil;
@@ -28,13 +28,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/user")
 public class UserController extends BaseController  {
     private final TokenUtil tokenUtil;
-    private final TokenSerivce tokenSerivce;
+    private final TokenService tokenService;
     private final UserService userService;
     private final EnterpriseService enterpriseService;
 
-    public UserController(TokenUtil tokenUtil, TokenSerivce tokenSerivce, UserService userService, EnterpriseService enterpriseService) {
+    public UserController(TokenUtil tokenUtil, TokenService tokenService, UserService userService, EnterpriseService enterpriseService) {
         this.tokenUtil = tokenUtil;
-        this.tokenSerivce = tokenSerivce;
+        this.tokenService = tokenService;
         this.userService = userService;
         this.enterpriseService = enterpriseService;
     }
@@ -44,7 +44,7 @@ public class UserController extends BaseController  {
     public Response getUser(@RequestHeader("token") String token) {
         String userId = tokenUtil.getClaim(token, "userId").asString();
         User user = userService.getUserById(userId);
-        Token tok = tokenSerivce.getTokenById(userId);
+        Token tok = tokenService.getTokenById(userId);
         if (user != null) {
             Enterprise enterprise = enterpriseService.getEnterpriseById(user.getEnterpriseId());
             UserInfoVO userInfoVO = UserInfoVO.builder()
