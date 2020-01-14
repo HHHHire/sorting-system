@@ -1,5 +1,5 @@
 "use strict";
-// Cicle Chart
+// Circle Chart
 Circles.create({
 	id:           'task-complete',
 	radius:       50,
@@ -13,9 +13,9 @@ Circles.create({
 	textClass:    'circles-text',
 	styleWrapper: true,
 	styleText:    true
-})
+});
 
-//Notify
+/*//Notify
 $.notify({
 	icon: 'flaticon-alarm-1',
 	title: 'Azzara',
@@ -27,7 +27,7 @@ $.notify({
 		align: "right"
 	},
 	time: 1000,
-});
+});*/
 
 // JQVmap
 $('#map-example').vectorMap(
