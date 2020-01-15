@@ -55,7 +55,8 @@ public class CategoryController extends BaseController {
                             .categoryId(c.getCategoryId())
                             .categoryName(c.getCategoryName())
                             .length(c.getCLength())
-                            .lengthTolerance(c.getLengthTolerance())
+                            .lengthTolerancePo(c.getLengthTolerancePo())
+                            .lengthToleranceNe(c.getLengthToleranceNe())
                             .weight(c.getWeight())
                             .weightTolerance(c.getWeightTolerance()).build()));
         } else {
@@ -76,7 +77,15 @@ public class CategoryController extends BaseController {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
         Category category = categoryService.getCategoryById(enterpriseId, categoryId);
         if (category != null) {
-            return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, categoryId);
+            return ResponseUtil.responseWithData(ResponseStatus.SUCCESS,
+                    CategoryVO.builder()
+                    .categoryId(categoryId)
+                    .categoryName(category.getCategoryName())
+                    .length(category.getCLength())
+                    .lengthTolerancePo(category.getLengthTolerancePo())
+                    .lengthToleranceNe(category.getLengthToleranceNe())
+                    .weight(category.getWeight())
+                    .weightTolerance(category.getWeightTolerance()).build());
         } else {
             return ResponseUtil.responseWithoutData(ResponseStatus.NOT_FOUND);
         }

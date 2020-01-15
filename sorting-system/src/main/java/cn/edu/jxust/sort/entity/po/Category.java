@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Table;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -46,10 +47,15 @@ public class Category implements Serializable {
     @Column(columnDefinition = "decimal(10,4) comment '长度'")
     private BigDecimal cLength;
     /**
-     * 长度公差
+     * 长度正公差
      */
-    @Column(columnDefinition = "decimal(10,4) comment '长度公差'")
-    private BigDecimal lengthTolerance;
+    @Column(columnDefinition = "decimal(10,4) comment '长度正公差'")
+    private BigDecimal lengthTolerancePo;
+    /**
+     * 长度负公差
+     */
+    @Column(columnDefinition = "decimal(10,4) comment '长度负公差'")
+    private BigDecimal lengthToleranceNe;
     /**
      * 重量
      */

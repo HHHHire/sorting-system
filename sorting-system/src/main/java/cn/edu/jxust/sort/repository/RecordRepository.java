@@ -56,6 +56,9 @@ public interface RecordRepository extends JpaRepository<Record, String> {
     @Query(value = "select * from ss_record sr where sr.enterprise_id = ?1 and sr.counts < 0 order by sr.create_time desc", nativeQuery = true)
     List<Record> findOutRecord(String enterpriseId);
 
+    @Query(value = "select * from ss_record sr where sr.enterprise_id = ?1 and sr.counts > 0 between ?2 and ?3 order by sr.create_time desc", nativeQuery = true)
+    List<Record> findInRecord(String enterpriseId, Long start, Long end);
+
     /**
      * 通过员工卡号查询记录
      *
@@ -63,6 +66,9 @@ public interface RecordRepository extends JpaRepository<Record, String> {
      * @param employeeCard 员工卡号
      * @return List<Record>
      */
-    @Query(value = "select * from ss_record sr where sr.enterprise_id = ?1 and sr.employee_card = ?2 and sr.counts < 0 order by sr.create_time desc", nativeQuery = true)
-    List<Record> findOutRecordByEmployeeCard(String enterpriseId, String employeeCard);
+    @Query(value = "select * from ss_record sr where sr.enterprise_id = ?1 and sr.employee_card = ?2 and sr.counts < 0 between ?3 and ?4 order by sr.create_time desc", nativeQuery = true)
+    List<Record> findOutRecordByEmployeeCard(String enterpriseId, String employeeCard, Long startTime, Long endTime);
+
+    @Query(value = "select * from ss_record sr where sr.enterprise_id = ?1 and sr.employee_card = ?2 and sr.counts > 0 between ?3 and ?4 order by sr.create_time desc", nativeQuery = true)
+    List<Record> findInRecordByEmployeeCard(String enterpriseId, String employeeCard, Long startTime, Long endTime);
 }

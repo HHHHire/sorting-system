@@ -49,6 +49,12 @@ public class Record implements Serializable {
      */
     @Column(columnDefinition = "int(11) comment '数量'")
     private Integer counts;
+
+    /**
+     * 分拣口编号
+     */
+    @Column(columnDefinition = "varchar(255) comment '分拣口编号'")
+    private String sortPortId;
     /**
      * 企业 id
      */
@@ -64,6 +70,13 @@ public class Record implements Serializable {
      */
     @Column(columnDefinition = "varchar(255) comment '员工卡号'")
     private String employeeCard;
+    /**
+     * 出库入库表示
+     * 0：出库
+     * 1：入库
+     */
+    @Column(columnDefinition = "int(11) comment '标识'")
+    private Integer flag;
     /**
      * 创建日期
      */

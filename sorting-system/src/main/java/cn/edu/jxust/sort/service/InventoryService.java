@@ -4,6 +4,7 @@ import cn.edu.jxust.sort.entity.po.Inventory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public interface InventoryService {
      * @param categoryId   分类编号
      * @return Inventory
      */
-    Inventory getInventoryByCategoryId(String enterpriseId, String categoryId);
+    List<Inventory> getInventoryByCategoryId(String enterpriseId, String categoryId);
 
     /**
      * 通过分类名称获取库存信息
@@ -38,7 +39,7 @@ public interface InventoryService {
      * @param categoryName 分类名称
      * @return Inventory
      */
-    Inventory getInventoryByCategoryName(String enterpriseId, String categoryName);
+    List<Inventory> getInventoryByCategoryName(String enterpriseId, String categoryName);
 
     /**
      * 更新库存
@@ -48,5 +49,14 @@ public interface InventoryService {
      * @param counts       数量
      * @return Integer
      */
-    Integer updateInventory(String enterpriseId, String categoryId, Integer counts);
+    Integer updateInventory(String enterpriseId, String categoryId, BigDecimal cLenght, BigDecimal lengthTolerancePo,
+                            BigDecimal lengthToleranceNe, BigDecimal weight, BigDecimal weightTolerance, Integer counts);
+
+    /**
+     * 创建库存
+     *
+     * @param inventory 库存实体
+     * @return
+     */
+    Inventory createInventory(Inventory inventory);
 }

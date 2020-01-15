@@ -9,6 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
 /**
  * @author: ddh
  * @data: 2020/1/8 16:00
@@ -29,22 +33,36 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Inventory getInventoryByCategoryId(String enterpriseId, String categoryId) {
-        return inventoryRepository.findByEnterpriseIdAndCategoryId(enterpriseId, categoryId).orElse(null);
+    public List<Inventory> getInventoryByCategoryId(String enterpriseId, String categoryId) {
+        return inventoryRepository.findByEnterpriseIdAndCategoryId(enterpriseId, categoryId);
     }
 
     @Override
-    public Inventory getInventoryByCategoryName(String enterpriseId, String categoryName) {
+    public List<Inventory> getInventoryByCategoryName(String enterpriseId, String categoryName) {
+        return inventoryRepository.findByEnterpriseIdAndCategoryName(enterpriseId, categoryName);
+    }
+
+    @Override
+    public Integer updateInventory(String enterpriseId, String categoryId, BigDecimal cLenght, BigDecimal lengthTolerancePo,
+                                   BigDecimal lengthToleranceNe, BigDecimal weight, BigDecimal weightTolerance, Integer counts) {
+        List<Inventory> inventories = inventoryRepository.findByEnterpriseIdAndCategoryId(enterpriseId, categoryId);
+        if (inventories.size() > 1) {
+            // 旧的类别还有货 更新旧的类别的库存
+            Inventory inventory = inventoryRepository.findBylengthAndWeight(enterpriseId, cLenght, lengthTolerancePo, lengthToleranceNe, weight, weightTolerance).orElse(null);
+            if (inventory != null) {
+                return inventoryRepository.updateInventoryById(enterpriseId, inventory.getInventoryId(), counts);
+            }
+        } else {
+            Integer count = inventoryRepository.findCounts(enterpriseId, categoryId);
+            if (count != null) {
+                return inventoryRepository.updateInventory(enterpriseId, categoryId, count + counts);
+            }
+        }
         return null;
     }
 
     @Override
-    public Integer updateInventory(String enterpriseId, String categoryId, Integer counts){
-        Integer count = inventoryRepository.findCounts(enterpriseId, categoryId);
-        if (count != null) {
-            return inventoryRepository.updateInventory(enterpriseId, categoryId, count + counts);
-        } else {
-            return null;
-        }
+    public Inventory createInventory(Inventory inventory) {
+        return inventoryRepository.save(inventory);
     }
 }

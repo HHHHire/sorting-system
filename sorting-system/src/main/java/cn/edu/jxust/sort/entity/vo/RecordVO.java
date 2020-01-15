@@ -20,5 +20,6 @@ public class RecordVO {
     private String categoryId;
     private String categoryName;
     private Integer counts;
+    private Integer flag;
     private Long createTime;
 }
