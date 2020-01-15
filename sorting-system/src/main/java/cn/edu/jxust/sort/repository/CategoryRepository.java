@@ -47,7 +47,8 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
     @Query(value = "update ss_category set " +
             "category_name=:#{#category.categoryName}, " +
             "clength=:#{#category.cLength}, " +
-            "length_tolerance=:#{#category.lengthTolerance}, " +
+            "length_tolerance_po=:#{#category.lengthTolerancePo}, " +
+            "length_tolerance_ne=:#{#category.lengthToleranceNe}, " +
             "weight=:#{#category.weight}, " +
             "weight_tolerance=:#{#category.weightTolerance}, " +
             "enterprise_id=:#{#category.enterpriseId}, " +

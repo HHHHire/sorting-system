@@ -120,11 +120,13 @@ public class RecordController {
      * @param employeeCard 用户卡号
      * @return Response
      */
-    @GetMapping("/out/{employeeCard}")
+    @GetMapping("/out")
     public Response getOutRecordByCard(@RequestHeader("token") String token,
-                                       @PathVariable String employeeCard) {
+                                       @RequestParam("employeeCard") String employeeCard,
+                                       @RequestParam("startTime") String startTime,
+                                       @RequestParam("endTime") String endTime) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
-        List<Record> outRecord = recordService.getOutRecordByEmployeeCard(enterpriseId, employeeCard);
+        List<Record> outRecord = recordService.getOutRecordByEmployeeCard(enterpriseId, employeeCard, startTime, endTime);
         if (outRecord != null) {
             return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, outRecord);
         } else {

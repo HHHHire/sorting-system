@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, String> {
      * @param categoryId   分类编号
      * @return Optional<Inventory>
      */
-    Optional<Inventory> findByEnterpriseIdAndCategoryId(String enterpriseId, String categoryId);
+    List<Inventory> findByEnterpriseIdAndCategoryId(String enterpriseId, String categoryId);
 
     /**
      * 通过分类名称查询库存
@@ -45,7 +46,11 @@ public interface InventoryRepository extends JpaRepository<Inventory, String> {
      * @param categoryName 分类名称
      * @return Optional<Inventory>
      */
-    Optional<Inventory> findByEnterpriseIdAndCategoryName(String enterpriseId, String categoryName);
+    List<Inventory> findByEnterpriseIdAndCategoryName(String enterpriseId, String categoryName);
+
+    @Query(value = "select * from ss_inventory si where si.enterprise_id=?1 and si.c_length=?2 and si.length_tolerance_po=?3 and si.length_tolerance_ne=?4 and si.weight=?5 and si.weight_tolerance=?6", nativeQuery = true)
+    Optional<Inventory> findBylengthAndWeight(String enterpriseId, BigDecimal cLenght, BigDecimal lengthTolerancePo,
+                                              BigDecimal lengthToleranceNe, BigDecimal weight, BigDecimal weightTolerance);
 
     /**
      * 更新库存
@@ -62,6 +67,22 @@ public interface InventoryRepository extends JpaRepository<Inventory, String> {
             "where enterprise_id=:#{#enterpriseId} " +
             "and category_id=:#{#categoryId}")
     Integer updateInventory(@Param("enterpriseId") String enterpriseId, @Param("categoryId") String categoryId, @Param("count") Integer count);
+
+    /**
+     * 更新库存
+     *
+     * @param enterpriseId 企业 id
+     * @param inventoryId   分类编号
+     * @param count        数量
+     * @return Integer
+     */
+    @Modifying
+    @Transactional(rollbackFor = Exception.class)
+    @Query(value = "update ss_inventory set " +
+            "counts=:#{#count} " +
+            "where enterprise_id=:#{#enterpriseId} " +
+            "and inventory_id=:#{#inventoryId}")
+    Integer updateInventoryById(@Param("enterpriseId") String enterpriseId, @Param("inventoryId") String inventoryId, @Param("count") Integer count);
 
     /**
      * 查询库存数量

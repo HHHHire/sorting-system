@@ -21,7 +21,8 @@ public class CategoryVO {
     private String categoryId;
     private String categoryName;
     private BigDecimal length;
-    private BigDecimal lengthTolerance;
+    private BigDecimal lengthTolerancePo;
+    private BigDecimal lengthToleranceNe;
     private BigDecimal weight;
     private BigDecimal weightTolerance;
 }
