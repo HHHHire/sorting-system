@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>智能分拣系统</title>
+    <title>Azzara Bootstrap 4 Admin Dashboard</title>
     <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport'/>
     <link rel="icon" href="assets/img/icon.ico" type="image/x-icon"/>
 
@@ -24,12 +24,6 @@
     <!-- CSS Files -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/azzara.min.css">
-
-    <!-- Notiflix -->
-    <link rel="stylesheet" href="assets/css/notiflix-1.3.0.min.css">
-
-    <!-- diy style -->
-    <link rel="stylesheet" href="css/diy-style.css">
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="assets/css/demo.css">
@@ -84,8 +78,7 @@
                             <li>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#"><i class="fa fa-user"> 个人信息</i></a>
-                                <a class="dropdown-item" href="#" id="logout-link"><i class="fa fa-sign-in-alt"></i>
-                                    退出登录</a>
+                                <a class="dropdown-item" href="#"><i class="fa fa-sign-in-alt"></i> 退出登录</a>
                             </li>
                         </ul>
                     </li>
@@ -102,25 +95,25 @@
         <div class="sidebar-wrapper scrollbar-inner">
             <div class="sidebar-content">
                 <ul class="nav">
-                    <li class="nav-item" id="load-warehouse">
-                        <a href="#">
-                            <i class="fas fa-chart-area"></i>
+                    <li class="nav-item active">
+                        <a href="#" id="load-warehouse">
+                            <i class="fas fa-chart-bar"></i>
                             <p>仓库信息</p>
                         </a>
                     </li>
-                    <li class="nav-item" id="load-stock">
+                    <li class="nav-item">
                         <a href="#">
                             <i class="fas fa-warehouse"></i>
                             <p>库存记录</p>
                         </a>
                     </li>
-                    <li class="nav-item" id="load-category">
+                    <li class="nav-item">
                         <a href="#">
                             <i class="fas fa-th-list"></i>
                             <p>分类</p>
                         </a>
                     </li>
-                    <li class="nav-item" id="load-setting">
+                    <li class="nav-item">
                         <a href="#">
                             <i class="fas fa-cog"></i>
                             <p>设置</p>
@@ -139,7 +132,13 @@
                 <h2>页面加载区域</h2>
             </div>
         </div>
-        Copyright © 2019 <a href="#" target="_blank" title="江西先进同产业研究院">江西先进同产业研究院</a>
+        <div class="row">
+            <div class="col-lg-12 col-sm-12">
+                <div class="card" style="display: inline-block">
+                    Copyright © 2019<a href="#" target="_blank" title="江西先进同产业研究院">江西先进同产业研究院</a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- 背景颜色设置 -->
@@ -202,6 +201,9 @@
 <!-- Datatables -->
 <script src="assets/js/plugin/datatables/datatables.min.js"></script>
 
+<!-- Bootstrap Notify -->
+<script src="assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
 <!-- Bootstrap Toggle -->
 <script src="assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js"></script>
 
@@ -213,40 +215,9 @@
 
 <!-- Azzara DEMO methods, don't include it in your project! -->
 <script src="assets/js/setting-demo.js"></script>
-
-<script src="assets/js/plugin/notiflix/notiflix-1.3.0.min.js"></script>
+<script src="assets/js/demo.js"></script>
 
 <!-- 自定义javascript -->
 <script src="js/load-page.js"></script>
-<script src="js/dateUtil.js"></script>
-<script src="js/app-url.js"></script>
-
-<script>
-    let token; //用户token
-
-    Notiflix.Report.Init({
-        fontFamily:"Consolas",
-        useGoogleFont:false,
-        backgroundColor: "#ffffff",
-        svgSize: "0px",
-        success: {
-            svgColor: "#ffffff"
-        }
-    });
-
-    window.onload = function () {
-        token = localStorage.getItem("sortToken");
-        if (token === null) {
-            window.location.href = "/login.html";
-        } else {
-            currentPage();
-        }
-    };
-
-    $("#logout-link").click(function () {
-        window.location.href = "login.html";
-    });
-
-</script>
 </body>
 </html>
