@@ -8,7 +8,7 @@ $(window).resize(function () {
 
 
 $('.changeMainHeaderColor').on('click', function () {
-    if ($(this).attr('data-color') == 'default') {
+    if ($(this).attr('data-color') === 'default') {
         $('.main-header').removeAttr('data-background-color');
     } else {
         $('.main-header').attr('data-background-color', $(this).attr('data-color'));
@@ -20,8 +20,8 @@ $('.changeMainHeaderColor').on('click', function () {
 });
 
 $('.changeBackgroundColor').on('click', function () {
-    $('body').removeAttr('data-background-color');
-    $('body').attr('data-background-color', $(this).attr('data-color'));
+    $("body").removeAttr('data-background-color');
+    $("body").attr('data-background-color', $(this).attr('data-color'));
     $(this).parent().find('.changeBackgroundColor').removeClass("selected");
     $(this).addClass("selected");
 });
@@ -33,7 +33,7 @@ if (!toggle_customSidebar) {
     var toggle = $('.custom-template .custom-toggle');
 
     toggle.on('click', (function () {
-            if (custom_open == 1) {
+            if (custom_open === 1) {
                 $('.custom-template').removeClass('open');
                 toggle.removeClass('toggled');
                 custom_open = 0;
