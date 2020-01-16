@@ -79,14 +79,14 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public Integer outputToday(String enterpriseId) {
+    public Integer getOutputToday(String enterpriseId) {
         long nowTime = System.currentTimeMillis();
         long todayStartTime = nowTime - (nowTime + TimeZone.getDefault().getRawOffset()) % (1000 * 3600 * 24);
         return calcOutputToday(enterpriseId, todayStartTime, nowTime);
     }
 
     @Override
-    public List<Integer> outputWeek(String enterpriseId) {
+    public List<Integer> getOutputWeek(String enterpriseId) {
         long nowTime = System.currentTimeMillis();
         long startTime = nowTime - (nowTime + TimeZone.getDefault().getRawOffset()) % (1000 * 3600 * 24);
         List<Integer> outputWeek = new ArrayList<>();
@@ -105,7 +105,7 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public List<Integer> outputYear(String enterpriseId) {
+    public List<Integer> getOutputYear(String enterpriseId) {
         long nowTime = System.currentTimeMillis();
         long startTime = nowTime - (nowTime + TimeZone.getDefault().getRawOffset()) % (1000 * 3600 * 24);
         List<Integer> outputMonth = new ArrayList<>();
@@ -128,14 +128,14 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public Integer workloadToday(String enterpriseId, String employeeCard) {
+    public Integer getWorkloadToday(String enterpriseId, String employeeCard) {
         long nowTime = System.currentTimeMillis();
         long startTime = nowTime - (nowTime + TimeZone.getDefault().getRawOffset()) % (1000 * 3600 * 24);
         return calcWorkloadToday(enterpriseId, employeeCard, startTime, nowTime);
     }
 
     @Override
-    public List<Integer> workloadSevenDays(String enterpriseId, String employeeCard) {
+    public List<Integer> getWorkloadWeek(String enterpriseId, String employeeCard) {
         long endTime = System.currentTimeMillis();
         long startTime = endTime - (endTime + TimeZone.getDefault().getRawOffset()) % (1000 * 3600 * 24);
         List<Integer> workload = new ArrayList<>();
@@ -148,7 +148,7 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public List<Double> workEfficiency(String enterpriseId, String employeeCard) {
+    public List<Double> getWorkEffWeek(String enterpriseId, String employeeCard) {
         long endTime = System.currentTimeMillis();
         long startTime = endTime - (endTime + TimeZone.getDefault().getRawOffset()) % (1000 * 3600 * 24);
         List<Double> workEff = new ArrayList<>();
@@ -184,7 +184,7 @@ public class RecordServiceImpl implements RecordService {
     }
 
     /**
-     * 计算当天产量
+     * 计算产量
      *
      * @param enterpriseId 企业 id
      * @param startTime    开始时间
@@ -192,16 +192,16 @@ public class RecordServiceImpl implements RecordService {
      * @return Integer
      */
     private Integer calcOutputToday(String enterpriseId, Long startTime, Long endTime) {
-        Integer counst = 0;
+        Integer output = 0;
         List<Record> inRecord = recordRepository.findInRecord(enterpriseId, startTime, endTime);
         for (Record record : inRecord) {
-            counst += record.getCounts();
+            output += record.getCounts();
         }
-        return counst;
+        return output;
     }
 
     /**
-     * 计算工人当天工作量
+     * 计算工人工作量
      *
      * @param enterpriseId 企业 id
      * @param employeeCard 员工卡号
@@ -243,6 +243,7 @@ public class RecordServiceImpl implements RecordService {
      */
     @Scheduled(cron = "0 01 * * * *")
     @Async
+    @Override
     public void saveOutputToday() {
         long nowTime = System.currentTimeMillis();
         // 昨天结束时间
@@ -250,6 +251,12 @@ public class RecordServiceImpl implements RecordService {
         long startTime = endTime - 86399999;
         List<Enterprise> enterprises = enterpriseRepository.findAll();
         for (Enterprise enterprise : enterprises) {
+            // 判断 redis 是否已经初始化过
+            Object valueByte = redisPoolUtil.getValueByte((enterprise.getEnterpriseId() + nowTime).getBytes());
+            if (valueByte == null) {
+                initRedis(enterprise.getEnterpriseId(), nowTime);
+            }
+
             Integer total = 0;
             Integer output = calcOutputToday(enterprise.getEnterpriseId(), startTime, endTime);
             // 保存当日数据
@@ -286,5 +293,23 @@ public class RecordServiceImpl implements RecordService {
         Date date = new Date(time);
         SimpleDateFormat format = new SimpleDateFormat("dd");
         return format.format(date);
+    }
+
+    /**
+     * 初始化 redis
+     *
+     * @param enterpriseId 企业 id
+     * @param time         时间
+     */
+    private void initRedis(String enterpriseId, Long time) {
+        Long timeBack = time;
+        for (int i = 0; i < WEEK; i++) {
+            redisPoolUtil.setValueByte((enterpriseId + getWeek(time)).getBytes(), SerializeUtil.serialize(0));
+            time -= 86400000;
+        }
+        for (int i = 0; i < YEAR; i++) {
+            redisPoolUtil.setValueByte((enterpriseId + getMonth(timeBack)).getBytes(), SerializeUtil.serialize(0));
+            timeBack -= 2592000000L;
+        }
     }
 }

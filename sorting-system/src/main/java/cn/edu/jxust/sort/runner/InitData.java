@@ -5,6 +5,7 @@ import cn.edu.jxust.sort.entity.po.Admin;
 import cn.edu.jxust.sort.service.AccountService;
 import cn.edu.jxust.sort.service.AdminService;
 import cn.edu.jxust.sort.util.EncryptionUtil;
+import cn.edu.jxust.sort.util.RedisPoolUtil;
 import cn.edu.jxust.sort.util.UUIDUtil;
 import cn.edu.jxust.sort.util.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component;
  * @description
  **/
 @Component
-public class InitAdmin implements CommandLineRunner {
+public class InitData implements CommandLineRunner {
     private final static String ADMIN = "admin";
     private final static String PASS = "123456";
     private final static String PHONE = "15311111111";
@@ -25,11 +26,13 @@ public class InitAdmin implements CommandLineRunner {
 
     private final AdminService adminService;
     private final AccountService accountService;
+    private final RedisPoolUtil redisPoolUtil;
 
     @Autowired
-    public InitAdmin(AdminService adminService, AccountService accountService) {
+    public InitData(AdminService adminService, AccountService accountService, RedisPoolUtil redisPoolUtil) {
         this.adminService = adminService;
         this.accountService = accountService;
+        this.redisPoolUtil = redisPoolUtil;
     }
 
     @Override

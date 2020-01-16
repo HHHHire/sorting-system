@@ -69,7 +69,7 @@ public interface RecordService {
      * @param enterpriseId 企业 id
      * @return Integer
      */
-    Integer outputToday(String enterpriseId);
+    Integer getOutputToday(String enterpriseId);
 
     /**
      * 获取过去七天产量
@@ -77,7 +77,7 @@ public interface RecordService {
      * @param enterpriseId 企业 id
      * @return List<Integer>
      */
-    List<Integer> outputWeek(String enterpriseId);
+    List<Integer> getOutputWeek(String enterpriseId);
 
     /**
      * 获取近一年的产量
@@ -85,7 +85,7 @@ public interface RecordService {
      * @param enterpriseId 企业 id
      * @return List<Integer>
      */
-    List<Integer> outputYear(String enterpriseId);
+    List<Integer> getOutputYear(String enterpriseId);
 
     /**
      * 今日员工的工作量
@@ -94,7 +94,7 @@ public interface RecordService {
      * @param employeeCard 员工卡号
      * @return Integer
      */
-    Integer workloadToday(String enterpriseId, String employeeCard);
+    Integer getWorkloadToday(String enterpriseId, String employeeCard);
 
     /**
      * 员工一周工作量
@@ -103,7 +103,7 @@ public interface RecordService {
      * @param employeeCard 员工卡号
      * @return List<Integer>
      */
-    List<Integer> workloadSevenDays(String enterpriseId, String employeeCard);
+    List<Integer> getWorkloadWeek(String enterpriseId, String employeeCard);
 
     /**
      * 员工一周工作效率
@@ -112,5 +112,7 @@ public interface RecordService {
      * @param employeeCard 员工卡号
      * @return List<Double>
      */
-    List<Double> workEfficiency(String enterpriseIs, String employeeCard);
+    List<Double> getWorkEffWeek(String enterpriseIs, String employeeCard);
+
+    void saveOutputToday();
 }

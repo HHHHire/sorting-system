@@ -49,8 +49,8 @@ public interface InventoryService {
      * @param counts       数量
      * @return Integer
      */
-    Integer updateInventory(String enterpriseId, String categoryId, BigDecimal cLenght, BigDecimal lengthTolerancePo,
-                            BigDecimal lengthToleranceNe, BigDecimal weight, BigDecimal weightTolerance, Integer counts);
+    Integer updateInventory(String enterpriseId, String categoryId, String cLenght, String lengthTolerancePo,
+                            String lengthToleranceNe, String weight, String weightTolerance, Integer counts);
 
     /**
      * 创建库存

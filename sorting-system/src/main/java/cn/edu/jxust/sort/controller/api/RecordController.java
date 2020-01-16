@@ -87,6 +87,11 @@ public class RecordController {
     public Response setOutRecord(@RequestHeader("token") String token,
                                  @RequestParam("categoryId") String categoryId,
                                  @RequestParam("counts") String counts,
+                                 @RequestParam("cLength") String cLength,
+                                 @RequestParam("lengthTolerancePo") String lengthTolerancePo,
+                                 @RequestParam("lengthToleranceNe") String lengthToleranceNe,
+                                 @RequestParam("weight") String weight,
+                                 @RequestParam("weightTolerance") String weightTolerance,
                                  @RequestParam("employeeCard") String employeeCard) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
         Category category = categoryService.getCategoryById(enterpriseId, categoryId);
@@ -102,7 +107,7 @@ public class RecordController {
                 .employeeCard(employeeCard)
                 .build());
         if (record != null) {
-            Integer i = inventoryService.updateInventory(enterpriseId, categoryId, outCounts > 0 ? -outCounts : outCounts);
+            Integer i = inventoryService.updateInventory(enterpriseId, categoryId, cLength, lengthTolerancePo, lengthToleranceNe, weight, weightTolerance, outCounts > 0 ? -outCounts : outCounts);
             if (i != null && i > 0) {
                 return ResponseUtil.responseWithoutData(ResponseStatus.SUCCESS);
             } else {
@@ -110,27 +115,6 @@ public class RecordController {
             }
         } else {
             return ResponseUtil.responseWithoutData(ResponseStatus.FAILED);
-        }
-    }
-
-    /**
-     * 通过员工卡号查看出库记录
-     *
-     * @param token        用户 token
-     * @param employeeCard 用户卡号
-     * @return Response
-     */
-    @GetMapping("/out")
-    public Response getOutRecordByCard(@RequestHeader("token") String token,
-                                       @RequestParam("employeeCard") String employeeCard,
-                                       @RequestParam("startTime") String startTime,
-                                       @RequestParam("endTime") String endTime) {
-        String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
-        List<Record> outRecord = recordService.getOutRecordByEmployeeCard(enterpriseId, employeeCard, startTime, endTime);
-        if (outRecord != null) {
-            return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, outRecord);
-        } else {
-            return ResponseUtil.responseWithoutData(ResponseStatus.NOT_FOUND);
         }
     }
 
@@ -150,4 +134,149 @@ public class RecordController {
             return ResponseUtil.responseWithoutData(ResponseStatus.NOT_FOUND);
         }
     }
+
+    /**
+     * 通过员工卡号查看出库记录
+     *
+     * @param token        用户 token
+     * @param employeeCard 用户卡号
+     * @param startTime    开始时间
+     * @param endTime      结束时间
+     * @return Response
+     */
+    @GetMapping("/outByCard")
+    public Response getOutRecordByCard(@RequestHeader("token") String token,
+                                       @RequestParam("employeeCard") String employeeCard,
+                                       @RequestParam("startTime") String startTime,
+                                       @RequestParam("endTime") String endTime) {
+        String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
+        List<Record> outRecord = recordService.getOutRecordByEmployeeCard(enterpriseId, employeeCard, startTime, endTime);
+        if (outRecord != null) {
+            return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, outRecord);
+        } else {
+            return ResponseUtil.responseWithoutData(ResponseStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * 通过员工卡号查看入库记录
+     *
+     * @param token        用户 token
+     * @param employeeCard 用户卡号
+     * @param startTime    开始时间
+     * @param endTime      结束时间
+     * @return Response
+     */
+    @GetMapping("/in")
+    public Response getInRecordByCard(@RequestParam("token") String token,
+                                      @RequestParam("employeeCard") String employeeCard,
+                                      @RequestParam("startTime") String startTime,
+                                      @RequestParam("endTime") String endTime) {
+        String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
+        List<Record> inRecord = recordService.getInRecordByEmployeeCard(enterpriseId, employeeCard, startTime, endTime);
+        if (inRecord != null) {
+            return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, inRecord);
+        } else {
+            return ResponseUtil.responseWithoutData(ResponseStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * 获取当天产量
+     *
+     * @param token 用户 token
+     * @return Response
+     */
+    @GetMapping("/output/today")
+    public Response getOutputToday(@RequestParam("token") String token) {
+        String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
+        return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, recordService.getOutputToday(enterpriseId));
+    }
+
+    /**
+     * 获取一周产量
+     *
+     * @param token 用户 token
+     * @return Response
+     */
+    @GetMapping("/output/week")
+    public Response getOutputWeek(@RequestParam("token") String token) {
+        String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
+        List<Integer> outputWeek = recordService.getOutputWeek(enterpriseId);
+        if (outputWeek == null || outputWeek.size() < 7) {
+            return ResponseUtil.responseWithoutData(ResponseStatus.FAILED);
+        } else {
+            return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, outputWeek);
+        }
+    }
+
+    /**
+     * 获取一年的产量
+     *
+     * @param token 用户 token
+     * @return Response
+     */
+    @GetMapping("/output/year")
+    public Response getOutputYear(@RequestParam("token") String token) {
+        String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
+        List<Integer> outputYear = recordService.getOutputYear(enterpriseId);
+        if (outputYear == null || outputYear.size() < 12) {
+            return ResponseUtil.responseWithoutData(ResponseStatus.FAILED);
+        } else {
+            return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, outputYear);
+        }
+    }
+
+    /**
+     * 获取员工今日工作量
+     *
+     * @param token        用户 token
+     * @param employeeCard 员工卡号
+     * @return Response
+     */
+    @GetMapping("/workload/today")
+    public Response getWorkloadToday(@RequestParam("token") String token,
+                                     @RequestParam("employeeCard") String employeeCard) {
+        String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
+        return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, recordService.getWorkloadToday(enterpriseId, employeeCard));
+    }
+
+    /**
+     * 获取员工这周工作量
+     *
+     * @param token        用户 token
+     * @param employeeCard 员工卡号
+     * @return Response
+     */
+    @GetMapping("/workload/week")
+    public Response getWorkloadWeek(@RequestParam("token") String token,
+                                    @RequestParam("employeeCard") String employeeCard) {
+        String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
+        List<Integer> workloadWeek = recordService.getWorkloadWeek(enterpriseId, employeeCard);
+        if (workloadWeek != null) {
+            return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, workloadWeek);
+        } else {
+            return ResponseUtil.responseWithoutData(ResponseStatus.FAILED);
+        }
+    }
+
+    /**
+     * 获取员工这周工作效率
+     *
+     * @param token        用户 token
+     * @param employeeCard 员工卡号
+     * @return Response
+     */
+    @GetMapping("/workEff/week")
+    public Response getWorkEffWeek(@RequestParam("token") String token,
+                                   @RequestParam("employeeCard") String employeeCard) {
+        String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
+        List<Double> workEffWeek = recordService.getWorkEffWeek(enterpriseId, employeeCard);
+        if (workEffWeek != null) {
+            return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, workEffWeek);
+        } else {
+            return ResponseUtil.responseWithoutData(ResponseStatus.FAILED);
+        }
+    }
+
 }

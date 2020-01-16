@@ -70,12 +70,13 @@ public class InventoryController {
     public Response getInventoryByCategoryId(@RequestHeader("token") String token,
                                              @PathVariable String categoryId) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
-        Inventory inventory = inventoryService.getInventoryByCategoryId(enterpriseId, categoryId);
-        if (inventory != null) {
-            return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, InventoryVO.builder()
-                    .categoryName(inventory.getCategoryName())
-                    .counts(inventory.getCounts())
-                    .updateTime(inventory.getUpdateTime()).build());
+        List<Inventory> inventories = inventoryService.getInventoryByCategoryId(enterpriseId, categoryId);
+        if (inventories != null) {
+            inventories.forEach(i -> InventoryVO.builder()
+                .categoryName(i.getCategoryName())
+                .counts(i.getCounts())
+                .updateTime(i.getUpdateTime()).build());
+            return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, inventories);
         } else {
             return ResponseUtil.responseWithoutData(ResponseStatus.NOT_FOUND);
         }

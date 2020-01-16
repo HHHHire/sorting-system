@@ -43,12 +43,12 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Integer updateInventory(String enterpriseId, String categoryId, BigDecimal cLenght, BigDecimal lengthTolerancePo,
-                                   BigDecimal lengthToleranceNe, BigDecimal weight, BigDecimal weightTolerance, Integer counts) {
+    public Integer updateInventory(String enterpriseId, String categoryId, String cLenght, String lengthTolerancePo,
+                                   String lengthToleranceNe, String weight, String weightTolerance, Integer counts) {
         List<Inventory> inventories = inventoryRepository.findByEnterpriseIdAndCategoryId(enterpriseId, categoryId);
         if (inventories.size() > 1) {
             // 旧的类别还有货 更新旧的类别的库存
-            Inventory inventory = inventoryRepository.findBylengthAndWeight(enterpriseId, cLenght, lengthTolerancePo, lengthToleranceNe, weight, weightTolerance).orElse(null);
+            Inventory inventory = inventoryRepository.findBylengthAndWeight(enterpriseId, new BigDecimal(cLenght), new BigDecimal(lengthTolerancePo), new BigDecimal(lengthToleranceNe), new BigDecimal(weight), new BigDecimal(weightTolerance)).orElse(null);
             if (inventory != null) {
                 return inventoryRepository.updateInventoryById(enterpriseId, inventory.getInventoryId(), counts);
             }

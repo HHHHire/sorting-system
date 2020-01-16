@@ -103,4 +103,8 @@ public class RedisPoolUtil {
         }
         return result;
     }
+
+    public void initRedis() {
+
+    }
 }
