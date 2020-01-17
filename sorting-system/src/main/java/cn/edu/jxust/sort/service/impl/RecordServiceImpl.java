@@ -230,7 +230,7 @@ public class RecordServiceImpl implements RecordService {
     }
 
     /**
-     * 计算产量
+     * 计算产量(应该每进来一条记录，就更新到redis，后续完善)
      *
      * @param enterpriseId 企业 id
      * @param startTime    开始时间

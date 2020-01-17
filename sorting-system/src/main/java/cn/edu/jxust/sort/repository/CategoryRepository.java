@@ -43,6 +43,12 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
      */
     Category findByEnterpriseIdAndCategoryId(String enterpriseId, String categoryId);
 
+    /**
+     * 更新分类
+     *
+     * @param category 分类实体
+     * @return Integer
+     */
     @Modifying
     @Transactional(rollbackFor = Exception.class)
     @Query(value = "update ss_category set " +
@@ -58,6 +64,12 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
             "where category_id=:#{#category.categoryId}")
     Integer updateCategory(Category category);
 
+    /**
+     * 删除分类
+     *
+     * @param categoryId 分类编号
+     * @return Integer
+     */
     @Modifying
     @Transactional(rollbackFor = Exception.class)
     Integer deleteByCategoryId(String categoryId);

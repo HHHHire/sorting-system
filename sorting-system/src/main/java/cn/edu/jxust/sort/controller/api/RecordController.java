@@ -1,7 +1,6 @@
 package cn.edu.jxust.sort.controller.api;
 
 
-import cn.edu.jxust.sort.entity.po.Category;
 import cn.edu.jxust.sort.entity.po.Record;
 import cn.edu.jxust.sort.entity.vo.RecordVO;
 import cn.edu.jxust.sort.service.CategoryService;
@@ -10,10 +9,10 @@ import cn.edu.jxust.sort.service.RecordService;
 import cn.edu.jxust.sort.util.ResponseUtil;
 import cn.edu.jxust.sort.util.TokenUtil;
 import cn.edu.jxust.sort.util.UUIDUtil;
+import cn.edu.jxust.sort.util.annotations.RequiredPermission;
 import cn.edu.jxust.sort.util.common.Const;
 import cn.edu.jxust.sort.util.enums.ResponseStatus;
 import cn.edu.jxust.sort.util.models.Response;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,15 +31,11 @@ import java.util.List;
 public class RecordController {
     private final RecordService recordService;
     private final TokenUtil tokenUtil;
-    private final CategoryService categoryService;
-    private final InventoryService inventoryService;
 
     @Autowired
-    public RecordController(RecordService recordService, TokenUtil tokenUtil, CategoryService categoryService, InventoryService inventoryService) {
+    public RecordController(RecordService recordService, TokenUtil tokenUtil) {
         this.recordService = recordService;
         this.tokenUtil = tokenUtil;
-        this.categoryService = categoryService;
-        this.inventoryService = inventoryService;
     }
 
     /**
@@ -54,6 +49,7 @@ public class RecordController {
      * @param size       页面大小
      * @return Response
      */
+    @RequiredPermission
     @GetMapping
     public Response getRecord(@RequestHeader("token") String token,
                               @RequestParam(value = "categoryId", required = false) String categoryId,
@@ -85,6 +81,7 @@ public class RecordController {
      * @param employeeCard 员工卡号
      * @return Response
      */
+    @RequiredPermission
     @PostMapping("/out")
     public Response setOutRecord(@RequestHeader("token") String token,
                                  @RequestParam("categoryId") String categoryId,
@@ -124,6 +121,7 @@ public class RecordController {
      * @param token 用户 token
      * @return Response
      */
+    @RequiredPermission
     @GetMapping("/out")
     public Response getOutRecord(@RequestHeader("token") String token) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
@@ -144,6 +142,7 @@ public class RecordController {
      * @param endTime      结束时间
      * @return Response
      */
+    @RequiredPermission
     @GetMapping("/outByCard")
     public Response getOutRecordByCard(@RequestHeader("token") String token,
                                        @RequestParam("employeeCard") String employeeCard,
@@ -167,6 +166,7 @@ public class RecordController {
      * @param endTime      结束时间
      * @return Response
      */
+    @RequiredPermission
     @GetMapping("/inByCard")
     public Response getInRecordByCard(@RequestHeader("token") String token,
                                       @RequestParam("employeeCard") String employeeCard,
@@ -187,6 +187,7 @@ public class RecordController {
      * @param token 用户 token
      * @return Response
      */
+    @RequiredPermission
     @GetMapping("/output/today")
     public Response getOutputToday(@RequestHeader("token") String token) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
@@ -199,6 +200,7 @@ public class RecordController {
      * @param token 用户 token
      * @return Response
      */
+    @RequiredPermission
     @GetMapping("/output/week")
     public Response getOutputWeek(@RequestHeader("token") String token) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
@@ -216,6 +218,7 @@ public class RecordController {
      * @param token 用户 token
      * @return Response
      */
+    @RequiredPermission
     @GetMapping("/output/year")
     public Response getOutputYear(@RequestHeader("token") String token) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
@@ -234,6 +237,7 @@ public class RecordController {
      * @param employeeCard 员工卡号
      * @return Response
      */
+    @RequiredPermission
     @GetMapping("/workload/today")
     public Response getWorkloadToday(@RequestHeader("token") String token,
                                      @RequestParam("employeeCard") String employeeCard) {
@@ -248,6 +252,7 @@ public class RecordController {
      * @param employeeCard 员工卡号
      * @return Response
      */
+    @RequiredPermission
     @GetMapping("/workload/week")
     public Response getWorkloadWeek(@RequestHeader("token") String token,
                                     @RequestParam("employeeCard") String employeeCard) {
@@ -267,6 +272,7 @@ public class RecordController {
      * @param employeeCard 员工卡号
      * @return Response
      */
+    @RequiredPermission
     @GetMapping("/workEff/week")
     public Response getWorkEffWeek(@RequestHeader("token") String token,
                                    @RequestParam("employeeCard") String employeeCard) {
@@ -279,6 +285,14 @@ public class RecordController {
         }
     }
 
+    /**
+     * 添加记录(测试用)
+     *
+     * @param token  用户 token
+     * @param record 记录实体
+     * @return Response
+     */
+    @RequiredPermission
     @PostMapping("/in")
     public Response createRecord(@RequestHeader("token") String token,
                                  @RequestBody Record record) {

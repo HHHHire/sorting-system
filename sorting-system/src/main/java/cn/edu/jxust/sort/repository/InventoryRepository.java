@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -32,14 +31,22 @@ public interface InventoryRepository extends JpaRepository<Inventory, String> {
     Page<Inventory> findByEnterpriseId(String enterpriseId, Pageable pageable);
 
     /**
+     * 通过分类编号分页查询库存
+     *
+     * @param enterpriseId 企业 id
+     * @param categoryId   分类编号
+     * @param pageable     分页信息
+     * @return Optional<Inventory>
+     */
+    Page<Inventory> findByEnterpriseIdAndCategoryId(String enterpriseId, String categoryId, Pageable pageable);
+
+    /**
      * 通过分类编号查询库存
      *
      * @param enterpriseId 企业 id
      * @param categoryId   分类编号
      * @return Optional<Inventory>
      */
-    Page<Inventory> findByEnterpriseIdAndCategoryId(String enterpriseId, String categoryId, Pageable pageable);
-
     List<Inventory> findByEnterpriseIdAndCategoryId(String enterpriseId, String categoryId);
 
     /**
@@ -51,6 +58,17 @@ public interface InventoryRepository extends JpaRepository<Inventory, String> {
      */
     List<Inventory> findByEnterpriseIdAndCategoryName(String enterpriseId, String categoryName);
 
+    /**
+     * 通过参数查询库存信息
+     *
+     * @param enterpriseId      企业 id
+     * @param categoryLength    长度
+     * @param lengthTolerancePo 长度正公差
+     * @param lengthToleranceNe 长度负公差
+     * @param weight            重量
+     * @param weightTolerance   重量公差
+     * @return Optional<Inventory>
+     */
     @Query(value = "select * from ss_inventory si where si.enterprise_id=?1 and si.category_length=?2 and si.length_tolerance_po=?3 and si.length_tolerance_ne=?4 and si.weight=?5 and si.weight_tolerance=?6", nativeQuery = true)
     Optional<Inventory> findBylengthAndWeight(String enterpriseId, BigDecimal categoryLength, BigDecimal lengthTolerancePo,
                                               BigDecimal lengthToleranceNe, BigDecimal weight, BigDecimal weightTolerance);
@@ -76,7 +94,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, String> {
      * 更新库存
      *
      * @param enterpriseId 企业 id
-     * @param inventoryId   分类编号
+     * @param inventoryId  分类编号
      * @param count        数量
      * @return Integer
      */
@@ -99,6 +117,13 @@ public interface InventoryRepository extends JpaRepository<Inventory, String> {
     @Query(value = "select si.counts from ss_inventory si where si.enterprise_id = ?1 and si.category_id = ?2", nativeQuery = true)
     Integer findCounts(String enterpriseId, String categoryId);
 
+    /**
+     * 通过库存 id 查询库存数量
+     *
+     * @param enterpriseId 企业 id
+     * @param inventoryId  库存 id
+     * @return Integer
+     */
     @Query(value = "select si.counts from ss_inventory si where si.enterprise_id = ?1 and si.inventory_id = ?2", nativeQuery = true)
     Integer findCountsById(String enterpriseId, String inventoryId);
 }

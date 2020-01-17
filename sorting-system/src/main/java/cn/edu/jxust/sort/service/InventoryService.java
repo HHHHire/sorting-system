@@ -47,7 +47,7 @@ public interface InventoryService {
      * 创建库存
      *
      * @param inventory 库存实体
-     * @return
+     * @return Inventory
      */
     Inventory createInventory(Inventory inventory);
 }
