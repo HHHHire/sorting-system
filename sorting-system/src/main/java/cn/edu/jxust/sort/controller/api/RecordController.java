@@ -13,11 +13,13 @@ import cn.edu.jxust.sort.util.UUIDUtil;
 import cn.edu.jxust.sort.util.common.Const;
 import cn.edu.jxust.sort.util.enums.ResponseStatus;
 import cn.edu.jxust.sort.util.models.Response;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -83,36 +85,34 @@ public class RecordController {
      * @param employeeCard 员工卡号
      * @return Response
      */
-    @PostMapping
+    @PostMapping("/out")
     public Response setOutRecord(@RequestHeader("token") String token,
                                  @RequestParam("categoryId") String categoryId,
+                                 @RequestParam("categoryName") String categoryName,
                                  @RequestParam("counts") String counts,
-                                 @RequestParam("cLength") String cLength,
+                                 @RequestParam("categoryLength") String categoryLength,
                                  @RequestParam("lengthTolerancePo") String lengthTolerancePo,
                                  @RequestParam("lengthToleranceNe") String lengthToleranceNe,
                                  @RequestParam("weight") String weight,
                                  @RequestParam("weightTolerance") String weightTolerance,
                                  @RequestParam("employeeCard") String employeeCard) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
-        Category category = categoryService.getCategoryById(enterpriseId, categoryId);
-        String recordId = UUIDUtil.getUUID();
         Integer outCounts = Integer.valueOf(counts);
-        Record record = recordService.createRecord(Record.builder()
-                .recordId(recordId)
+        Integer record = recordService.createRecord(Record.builder()
+                .recordId(UUIDUtil.getUUID())
                 .categoryId(categoryId)
-                .categoryName(category.getCategoryName())
+                .categoryName(categoryName)
                 .counts(outCounts > 0 ? -outCounts : outCounts)
-                .deviceId(category.getDeviceId())
+                .categoryLength(new BigDecimal(categoryLength))
+                .lengthTolerancePo(new BigDecimal(lengthTolerancePo))
+                .lengthToleranceNe(new BigDecimal(lengthToleranceNe))
+                .weight(new BigDecimal(weight))
+                .weightTolerance(new BigDecimal(weightTolerance))
                 .enterpriseId(enterpriseId)
                 .employeeCard(employeeCard)
                 .build());
-        if (record != null) {
-            Integer i = inventoryService.updateInventory(enterpriseId, categoryId, cLength, lengthTolerancePo, lengthToleranceNe, weight, weightTolerance, outCounts > 0 ? -outCounts : outCounts);
-            if (i != null && i > 0) {
-                return ResponseUtil.responseWithoutData(ResponseStatus.SUCCESS);
-            } else {
-                return ResponseUtil.responseWithoutData(ResponseStatus.FAILED);
-            }
+        if (record != 0) {
+            return ResponseUtil.responseWithoutData(ResponseStatus.SUCCESS);
         } else {
             return ResponseUtil.responseWithoutData(ResponseStatus.FAILED);
         }
@@ -147,8 +147,8 @@ public class RecordController {
     @GetMapping("/outByCard")
     public Response getOutRecordByCard(@RequestHeader("token") String token,
                                        @RequestParam("employeeCard") String employeeCard,
-                                       @RequestParam("startTime") String startTime,
-                                       @RequestParam("endTime") String endTime) {
+                                       @RequestParam(value = "startTime", required = false) String startTime,
+                                       @RequestParam(value = "endTime", required = false) String endTime) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
         List<Record> outRecord = recordService.getOutRecordByEmployeeCard(enterpriseId, employeeCard, startTime, endTime);
         if (outRecord != null) {
@@ -167,11 +167,11 @@ public class RecordController {
      * @param endTime      结束时间
      * @return Response
      */
-    @GetMapping("/in")
-    public Response getInRecordByCard(@RequestParam("token") String token,
+    @GetMapping("/inByCard")
+    public Response getInRecordByCard(@RequestHeader("token") String token,
                                       @RequestParam("employeeCard") String employeeCard,
-                                      @RequestParam("startTime") String startTime,
-                                      @RequestParam("endTime") String endTime) {
+                                      @RequestParam(value = "startTime", required = false) String startTime,
+                                      @RequestParam(value = "endTime", required = false) String endTime) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
         List<Record> inRecord = recordService.getInRecordByEmployeeCard(enterpriseId, employeeCard, startTime, endTime);
         if (inRecord != null) {
@@ -188,7 +188,7 @@ public class RecordController {
      * @return Response
      */
     @GetMapping("/output/today")
-    public Response getOutputToday(@RequestParam("token") String token) {
+    public Response getOutputToday(@RequestHeader("token") String token) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
         return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, recordService.getOutputToday(enterpriseId));
     }
@@ -200,7 +200,7 @@ public class RecordController {
      * @return Response
      */
     @GetMapping("/output/week")
-    public Response getOutputWeek(@RequestParam("token") String token) {
+    public Response getOutputWeek(@RequestHeader("token") String token) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
         List<Integer> outputWeek = recordService.getOutputWeek(enterpriseId);
         if (outputWeek == null || outputWeek.size() < 7) {
@@ -217,7 +217,7 @@ public class RecordController {
      * @return Response
      */
     @GetMapping("/output/year")
-    public Response getOutputYear(@RequestParam("token") String token) {
+    public Response getOutputYear(@RequestHeader("token") String token) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
         List<Integer> outputYear = recordService.getOutputYear(enterpriseId);
         if (outputYear == null || outputYear.size() < 12) {
@@ -235,7 +235,7 @@ public class RecordController {
      * @return Response
      */
     @GetMapping("/workload/today")
-    public Response getWorkloadToday(@RequestParam("token") String token,
+    public Response getWorkloadToday(@RequestHeader("token") String token,
                                      @RequestParam("employeeCard") String employeeCard) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
         return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, recordService.getWorkloadToday(enterpriseId, employeeCard));
@@ -249,7 +249,7 @@ public class RecordController {
      * @return Response
      */
     @GetMapping("/workload/week")
-    public Response getWorkloadWeek(@RequestParam("token") String token,
+    public Response getWorkloadWeek(@RequestHeader("token") String token,
                                     @RequestParam("employeeCard") String employeeCard) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
         List<Integer> workloadWeek = recordService.getWorkloadWeek(enterpriseId, employeeCard);
@@ -268,14 +268,38 @@ public class RecordController {
      * @return Response
      */
     @GetMapping("/workEff/week")
-    public Response getWorkEffWeek(@RequestParam("token") String token,
+    public Response getWorkEffWeek(@RequestHeader("token") String token,
                                    @RequestParam("employeeCard") String employeeCard) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
-        List<Double> workEffWeek = recordService.getWorkEffWeek(enterpriseId, employeeCard);
+        List<String> workEffWeek = recordService.getWorkEffWeek(enterpriseId, employeeCard);
         if (workEffWeek != null) {
             return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, workEffWeek);
         } else {
             return ResponseUtil.responseWithoutData(ResponseStatus.FAILED);
+        }
+    }
+
+    @PostMapping("/in")
+    public Response createRecord(@RequestHeader("token") String token,
+                                 @RequestBody Record record) {
+        String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
+        Integer record1 = recordService.createRecord(Record.builder()
+                .recordId(UUIDUtil.getUUID())
+                .categoryId(record.getCategoryId())
+                .categoryName(record.getCategoryName())
+                .counts(record.getCounts())
+                .categoryLength(record.getCategoryLength())
+                .lengthTolerancePo(record.getLengthTolerancePo())
+                .lengthToleranceNe(record.getLengthToleranceNe())
+                .weight(record.getWeight())
+                .weightTolerance(record.getWeightTolerance())
+                .sortPortId(record.getSortPortId())
+                .enterpriseId(enterpriseId)
+                .employeeCard(record.getEmployeeCard()).build());
+        if (record1 == 0) {
+            return ResponseUtil.responseWithoutData(ResponseStatus.FAILED);
+        } else {
+            return ResponseUtil.responseWithoutData(ResponseStatus.SUCCESS);
         }
     }
 

@@ -31,7 +31,7 @@ public interface RecordService {
      * @param record 记录实体
      * @return Record
      */
-    Record createRecord(Record record);
+    Integer createRecord(Record record);
 
     /**
      * 获取出库记录
@@ -112,7 +112,7 @@ public interface RecordService {
      * @param employeeCard 员工卡号
      * @return List<Double>
      */
-    List<Double> getWorkEffWeek(String enterpriseIs, String employeeCard);
+    List<String> getWorkEffWeek(String enterpriseIs, String employeeCard);
 
     void saveOutputToday();
 }

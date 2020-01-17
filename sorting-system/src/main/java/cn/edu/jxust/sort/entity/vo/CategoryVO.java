@@ -20,9 +20,10 @@ import java.math.BigDecimal;
 public class CategoryVO {
     private String categoryId;
     private String categoryName;
-    private BigDecimal length;
+    private BigDecimal categoryLength;
     private BigDecimal lengthTolerancePo;
     private BigDecimal lengthToleranceNe;
     private BigDecimal weight;
     private BigDecimal weightTolerance;
+    private Long updateTime;
 }

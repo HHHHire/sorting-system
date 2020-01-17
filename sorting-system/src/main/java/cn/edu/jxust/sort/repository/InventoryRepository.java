@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +38,8 @@ public interface InventoryRepository extends JpaRepository<Inventory, String> {
      * @param categoryId   分类编号
      * @return Optional<Inventory>
      */
+    Page<Inventory> findByEnterpriseIdAndCategoryId(String enterpriseId, String categoryId, Pageable pageable);
+
     List<Inventory> findByEnterpriseIdAndCategoryId(String enterpriseId, String categoryId);
 
     /**
@@ -48,8 +51,8 @@ public interface InventoryRepository extends JpaRepository<Inventory, String> {
      */
     List<Inventory> findByEnterpriseIdAndCategoryName(String enterpriseId, String categoryName);
 
-    @Query(value = "select * from ss_inventory si where si.enterprise_id=?1 and si.c_length=?2 and si.length_tolerance_po=?3 and si.length_tolerance_ne=?4 and si.weight=?5 and si.weight_tolerance=?6", nativeQuery = true)
-    Optional<Inventory> findBylengthAndWeight(String enterpriseId, BigDecimal cLenght, BigDecimal lengthTolerancePo,
+    @Query(value = "select * from ss_inventory si where si.enterprise_id=?1 and si.category_length=?2 and si.length_tolerance_po=?3 and si.length_tolerance_ne=?4 and si.weight=?5 and si.weight_tolerance=?6", nativeQuery = true)
+    Optional<Inventory> findBylengthAndWeight(String enterpriseId, BigDecimal categoryLength, BigDecimal lengthTolerancePo,
                                               BigDecimal lengthToleranceNe, BigDecimal weight, BigDecimal weightTolerance);
 
     /**
@@ -63,10 +66,11 @@ public interface InventoryRepository extends JpaRepository<Inventory, String> {
     @Modifying
     @Transactional(rollbackFor = Exception.class)
     @Query(value = "update ss_inventory set " +
-            "counts=:#{#count} " +
+            "counts=:#{#count}," +
+            "update_time=:#{#updateTime} " +
             "where enterprise_id=:#{#enterpriseId} " +
             "and category_id=:#{#categoryId}")
-    Integer updateInventory(@Param("enterpriseId") String enterpriseId, @Param("categoryId") String categoryId, @Param("count") Integer count);
+    Integer updateInventory(@Param("enterpriseId") String enterpriseId, @Param("categoryId") String categoryId, @Param("count") Integer count, @Param("updateTime") Long updateTime);
 
     /**
      * 更新库存
@@ -79,10 +83,11 @@ public interface InventoryRepository extends JpaRepository<Inventory, String> {
     @Modifying
     @Transactional(rollbackFor = Exception.class)
     @Query(value = "update ss_inventory set " +
-            "counts=:#{#count} " +
+            "counts=:#{#count}, " +
+            "update_time=:#{#updateTime} " +
             "where enterprise_id=:#{#enterpriseId} " +
             "and inventory_id=:#{#inventoryId}")
-    Integer updateInventoryById(@Param("enterpriseId") String enterpriseId, @Param("inventoryId") String inventoryId, @Param("count") Integer count);
+    Integer updateInventoryById(@Param("enterpriseId") String enterpriseId, @Param("inventoryId") String inventoryId, @Param("count") Integer count, @Param("updateTime") Long updateTime);
 
     /**
      * 查询库存数量
@@ -93,4 +98,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, String> {
      */
     @Query(value = "select si.counts from ss_inventory si where si.enterprise_id = ?1 and si.category_id = ?2", nativeQuery = true)
     Integer findCounts(String enterpriseId, String categoryId);
+
+    @Query(value = "select si.counts from ss_inventory si where si.enterprise_id = ?1 and si.inventory_id = ?2", nativeQuery = true)
+    Integer findCountsById(String enterpriseId, String inventoryId);
 }

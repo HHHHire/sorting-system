@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @author: ddh
@@ -55,6 +56,31 @@ public class Record implements Serializable {
      */
     @Column(columnDefinition = "varchar(255) comment '分拣口编号'")
     private String sortPortId;
+    /**
+     * 长度
+     */
+    @Column(columnDefinition = "decimal(10,4) comment '长度'")
+    private BigDecimal categoryLength;
+    /**
+     * 长度正公差
+     */
+    @Column(columnDefinition = "decimal(10,4) comment '长度正公差'")
+    private BigDecimal lengthTolerancePo;
+    /**
+     * 长度负公差
+     */
+    @Column(columnDefinition = "decimal(10,4) comment '长度负公差'")
+    private BigDecimal lengthToleranceNe;
+    /**
+     * 重量
+     */
+    @Column(columnDefinition = "decimal(10,4) comment '重量'")
+    private BigDecimal weight;
+    /**
+     * 重量公差
+     */
+    @Column(columnDefinition = "decimal(10,4) comment '重量公差'")
+    private BigDecimal weightTolerance;
     /**
      * 企业 id
      */

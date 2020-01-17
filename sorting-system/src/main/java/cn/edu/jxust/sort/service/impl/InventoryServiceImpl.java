@@ -28,13 +28,12 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Page<Inventory> getInventory(String enterpriseId, Pageable pageable) {
-        return inventoryRepository.findByEnterpriseId(enterpriseId, pageable);
-    }
-
-    @Override
-    public List<Inventory> getInventoryByCategoryId(String enterpriseId, String categoryId) {
-        return inventoryRepository.findByEnterpriseIdAndCategoryId(enterpriseId, categoryId);
+    public Page<Inventory> getInventory(String enterpriseId, String categoryId, Pageable pageable) {
+        if (categoryId == null) {
+            return inventoryRepository.findByEnterpriseId(enterpriseId, pageable);
+        } else {
+            return inventoryRepository.findByEnterpriseIdAndCategoryId(enterpriseId, categoryId, pageable);
+        }
     }
 
     @Override
@@ -43,19 +42,19 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Integer updateInventory(String enterpriseId, String categoryId, String cLenght, String lengthTolerancePo,
+    public Integer updateInventory(String enterpriseId, String categoryId, String categoryLength, String lengthTolerancePo,
                                    String lengthToleranceNe, String weight, String weightTolerance, Integer counts) {
         List<Inventory> inventories = inventoryRepository.findByEnterpriseIdAndCategoryId(enterpriseId, categoryId);
         if (inventories.size() > 1) {
             // 旧的类别还有货 更新旧的类别的库存
-            Inventory inventory = inventoryRepository.findBylengthAndWeight(enterpriseId, new BigDecimal(cLenght), new BigDecimal(lengthTolerancePo), new BigDecimal(lengthToleranceNe), new BigDecimal(weight), new BigDecimal(weightTolerance)).orElse(null);
+            Inventory inventory = inventoryRepository.findBylengthAndWeight(enterpriseId, new BigDecimal(categoryLength), new BigDecimal(lengthTolerancePo), new BigDecimal(lengthToleranceNe), new BigDecimal(weight), new BigDecimal(weightTolerance)).orElse(null);
             if (inventory != null) {
-                return inventoryRepository.updateInventoryById(enterpriseId, inventory.getInventoryId(), counts);
+                return inventoryRepository.updateInventoryById(enterpriseId, inventory.getInventoryId(), counts, System.currentTimeMillis());
             }
         } else {
             Integer count = inventoryRepository.findCounts(enterpriseId, categoryId);
             if (count != null) {
-                return inventoryRepository.updateInventory(enterpriseId, categoryId, count + counts);
+                return inventoryRepository.updateInventory(enterpriseId, categoryId, count + counts, System.currentTimeMillis());
             }
         }
         return null;

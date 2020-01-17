@@ -54,7 +54,7 @@ public class CategoryController extends BaseController {
                     categories.map(c -> CategoryVO.builder()
                             .categoryId(c.getCategoryId())
                             .categoryName(c.getCategoryName())
-                            .length(c.getCLength())
+                            .categoryLength(c.getCategoryLength())
                             .lengthTolerancePo(c.getLengthTolerancePo())
                             .lengthToleranceNe(c.getLengthToleranceNe())
                             .weight(c.getWeight())
@@ -81,13 +81,67 @@ public class CategoryController extends BaseController {
                     CategoryVO.builder()
                     .categoryId(categoryId)
                     .categoryName(category.getCategoryName())
-                    .length(category.getCLength())
+                    .categoryLength(category.getCategoryLength())
                     .lengthTolerancePo(category.getLengthTolerancePo())
                     .lengthToleranceNe(category.getLengthToleranceNe())
                     .weight(category.getWeight())
                     .weightTolerance(category.getWeightTolerance()).build());
         } else {
             return ResponseUtil.responseWithoutData(ResponseStatus.NOT_FOUND);
+        }
+    }
+
+    /********************************************* 接口测试用 ***************************************************/
+
+    @PostMapping
+    public Response createCategory(@RequestHeader("token") String token,
+                                   @RequestBody CategoryVO categoryVO) {
+        String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
+        Category category = categoryService.createCategory(Category.builder()
+                .categoryId(categoryVO.getCategoryId())
+                .categoryName(categoryVO.getCategoryName())
+                .categoryLength(categoryVO.getCategoryLength())
+                .lengthTolerancePo(categoryVO.getLengthTolerancePo())
+                .lengthToleranceNe(categoryVO.getLengthToleranceNe())
+                .weight(categoryVO.getWeight())
+                .weightTolerance(categoryVO.getWeightTolerance())
+                .enterpriseId(enterpriseId).build());
+        if (category != null) {
+            return ResponseUtil.responseWithoutData(ResponseStatus.SUCCESS);
+        } else {
+            return ResponseUtil.responseWithoutData(ResponseStatus.FAILED);
+        }
+    }
+
+    @PutMapping
+    public Response updateCategory(@RequestHeader("token") String token,
+                                   @RequestBody CategoryVO categoryVO) {
+        String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
+        Integer raw = categoryService.updateCategory(Category.builder()
+                .categoryId(categoryVO.getCategoryId())
+                .categoryName(categoryVO.getCategoryName())
+                .categoryLength(categoryVO.getCategoryLength())
+                .lengthTolerancePo(categoryVO.getLengthTolerancePo())
+                .lengthToleranceNe(categoryVO.getLengthToleranceNe())
+                .weight(categoryVO.getWeight())
+                .weightTolerance(categoryVO.getWeightTolerance())
+                .enterpriseId(enterpriseId)
+                .updateTime(categoryVO.getUpdateTime()).build());
+        if (raw == 0) {
+            return ResponseUtil.responseWithoutData(ResponseStatus.FAILED);
+        } else {
+            return ResponseUtil.responseWithoutData(ResponseStatus.SUCCESS);
+        }
+    }
+
+    @DeleteMapping("/{categoryId}")
+    public Response deleteCategory(@RequestHeader("token") String token,
+                                   @PathVariable String categoryId) {
+        Integer integer = categoryService.deleteCategory(categoryId);
+        if (integer == 0) {
+            return ResponseUtil.responseWithoutData(ResponseStatus.FAILED);
+        } else {
+            return ResponseUtil.responseWithoutData(ResponseStatus.SUCCESS);
         }
     }
 }

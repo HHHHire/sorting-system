@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
+import java.math.BigDecimal;
+
 /**
  * @author: ddh
  * @data: 2020/1/9 10:35
@@ -16,6 +19,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class InventoryVO {
     private String categoryName;
+    private BigDecimal categoryLength;
+    private BigDecimal lengthTolerancePo;
+    private BigDecimal lengthToleranceNe;
+    private BigDecimal weight;
+    private BigDecimal weightTolerance;
     private Integer counts;
     private Long updateTime;
 }
