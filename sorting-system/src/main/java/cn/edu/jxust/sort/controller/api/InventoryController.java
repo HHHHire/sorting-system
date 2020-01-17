@@ -9,7 +9,6 @@ import cn.edu.jxust.sort.util.TokenUtil;
 import cn.edu.jxust.sort.util.common.Const;
 import cn.edu.jxust.sort.util.enums.ResponseStatus;
 import cn.edu.jxust.sort.util.models.Response;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,14 +43,20 @@ public class InventoryController {
      */
     @GetMapping
     public Response getInventory(@RequestHeader("token") String token,
+                                 @RequestParam(value = "categoryId", required = false) String categoryId,
                                  @RequestParam(value = "page", defaultValue = Const.DEFAULT_PAGE_NUMBER, required = false) Integer page,
                                  @RequestParam(value = "size", defaultValue = Const.DEFAULT_PAGE_SIZE, required = false) Integer size) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
-        Page<Inventory> inventories = inventoryService.getInventory(enterpriseId, PageRequest.of(page, size));
+        Page<Inventory> inventories = inventoryService.getInventory(enterpriseId, categoryId, PageRequest.of(page, size));
         if (inventories != null) {
             return ResponseUtil.responseWithData(ResponseStatus.SUCCESS,
                     inventories.map(i -> InventoryVO.builder()
                             .categoryName(i.getCategoryName())
+                            .categoryLength(i.getCategoryLength())
+                            .lengthTolerancePo(i.getLengthTolerancePo())
+                            .lengthToleranceNe(i.getLengthToleranceNe())
+                            .weight(i.getWeight())
+                            .weightTolerance(i.getWeightTolerance())
                             .counts(i.getCounts())
                             .updateTime(i.getUpdateTime()).build()));
         } else {
@@ -59,26 +64,4 @@ public class InventoryController {
         }
     }
 
-    /**
-     * 通过类别查询库存
-     *
-     * @param token      用户 token
-     * @param categoryId 分类 id
-     * @return Response
-     */
-    @GetMapping("/{categoryId}")
-    public Response getInventoryByCategoryId(@RequestHeader("token") String token,
-                                             @PathVariable String categoryId) {
-        String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
-        List<Inventory> inventories = inventoryService.getInventoryByCategoryId(enterpriseId, categoryId);
-        if (inventories != null) {
-            inventories.forEach(i -> InventoryVO.builder()
-                .categoryName(i.getCategoryName())
-                .counts(i.getCounts())
-                .updateTime(i.getUpdateTime()).build());
-            return ResponseUtil.responseWithData(ResponseStatus.SUCCESS, inventories);
-        } else {
-            return ResponseUtil.responseWithoutData(ResponseStatus.NOT_FOUND);
-        }
-    }
 }

@@ -21,16 +21,7 @@ public interface InventoryService {
      * @param pageable     分页信息
      * @return Page<Inventory>
      */
-    Page<Inventory> getInventory(String enterpriseId, Pageable pageable);
-
-    /**
-     * 通过分类编号获取库存信息
-     *
-     * @param enterpriseId 企业 id
-     * @param categoryId   分类编号
-     * @return Inventory
-     */
-    List<Inventory> getInventoryByCategoryId(String enterpriseId, String categoryId);
+    Page<Inventory> getInventory(String enterpriseId, String categoryId, Pageable pageable);
 
     /**
      * 通过分类名称获取库存信息

@@ -46,7 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Integer updateCategory(Category category) {
         Integer raw;
         // 查询是否有相同定义的
-        Inventory inventory = inventoryRepository.findBylengthAndWeight(category.getEnterpriseId(), category.getCLength(), category.getLengthTolerancePo(), category.getLengthToleranceNe(),
+        Inventory inventory = inventoryRepository.findBylengthAndWeight(category.getEnterpriseId(), category.getCategoryLength(), category.getLengthTolerancePo(), category.getLengthToleranceNe(),
                 category.getWeight(), category.getWeightTolerance()).orElse(null);
         if (inventory == null) {
             raw = categoryRepository.updateCategory(category);
@@ -56,7 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
                         .inventoryId(UUIDUtil.getUUID())
                         .categoryId(category.getCategoryId())
                         .categoryName(category.getCategoryName())
-                        .cLength(category.getCLength())
+                        .categoryLength(category.getCategoryLength())
                         .lengthToleranceNe(category.getLengthToleranceNe())
                         .lengthTolerancePo(category.getLengthTolerancePo())
                         .weight(category.getWeight())
@@ -67,9 +67,6 @@ public class CategoryServiceImpl implements CategoryService {
         } else {
             raw = categoryRepository.updateCategory(category);
         }
-
-
-
         return raw;
     }
 
@@ -80,7 +77,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .inventoryId(UUIDUtil.getUUID())
                 .categoryId(category.getCategoryId())
                 .categoryName(category.getCategoryName())
-                .cLength(category.getCLength())
+                .categoryLength(category.getCategoryLength())
                 .lengthToleranceNe(category.getLengthToleranceNe())
                 .lengthTolerancePo(category.getLengthTolerancePo())
                 .weight(category.getWeight())

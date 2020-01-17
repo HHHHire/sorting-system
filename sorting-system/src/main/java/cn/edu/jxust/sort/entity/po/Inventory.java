@@ -50,7 +50,7 @@ public class Inventory implements Serializable {
      * 长度
      */
     @Column(columnDefinition = "decimal(10,4) comment '长度'")
-    private BigDecimal cLength;
+    private BigDecimal categoryLength;
     /**
      * 长度正公差
      */

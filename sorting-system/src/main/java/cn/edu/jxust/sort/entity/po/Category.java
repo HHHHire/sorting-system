@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Table;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -45,7 +44,7 @@ public class Category implements Serializable {
      * 长度
      */
     @Column(columnDefinition = "decimal(10,4) comment '长度'")
-    private BigDecimal cLength;
+    private BigDecimal categoryLength;
     /**
      * 长度正公差
      */

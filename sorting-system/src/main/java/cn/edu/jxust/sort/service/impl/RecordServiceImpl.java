@@ -1,8 +1,12 @@
 package cn.edu.jxust.sort.service.impl;
 
 import cn.edu.jxust.sort.entity.po.Enterprise;
+import cn.edu.jxust.sort.entity.po.Inventory;
+import cn.edu.jxust.sort.entity.po.Plan;
 import cn.edu.jxust.sort.entity.po.Record;
 import cn.edu.jxust.sort.repository.EnterpriseRepository;
+import cn.edu.jxust.sort.repository.InventoryRepository;
+import cn.edu.jxust.sort.repository.PlanRepository;
 import cn.edu.jxust.sort.repository.RecordRepository;
 import cn.edu.jxust.sort.service.RecordService;
 import cn.edu.jxust.sort.util.RedisPoolUtil;
@@ -14,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,14 +38,18 @@ public class RecordServiceImpl implements RecordService {
     private static final Integer YEAR = 12;
 
     private final RecordRepository recordRepository;
+    private final InventoryRepository inventoryRepository;
     private final EnterpriseRepository enterpriseRepository;
+    private final PlanRepository planRepository;
     private final RedisPoolUtil redisPoolUtil;
 
     @Autowired
-    public RecordServiceImpl(RecordRepository recordRepository, EnterpriseRepository enterpriseRepository, RedisPoolUtil redisPoolUtil) {
+    public RecordServiceImpl(RecordRepository recordRepository, EnterpriseRepository enterpriseRepository, RedisPoolUtil redisPoolUtil, InventoryRepository inventoryRepository, PlanRepository planRepository) {
         this.recordRepository = recordRepository;
         this.enterpriseRepository = enterpriseRepository;
+        this.inventoryRepository = inventoryRepository;
         this.redisPoolUtil = redisPoolUtil;
+        this.planRepository = planRepository;
     }
 
     @Override
@@ -54,9 +63,44 @@ public class RecordServiceImpl implements RecordService {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public Record createRecord(Record record) {
-        return recordRepository.save(record);
+    public Integer createRecord(Record record) {
+        Record save = recordRepository.save(record);
+        // 更新规划中的已完成数量
+        Plan plan = planRepository.findByEnterpriseIdAndSortPortId(record.getEnterpriseId(), record.getSortPortId()).orElse(null);
+        if (plan != null) {
+            plan.setCompleteCounts(plan.getCompleteCounts() + record.getCounts());
+            plan.setUpdateTime(System.currentTimeMillis());
+            planRepository.updatePlan(plan);
+        }
+        // 更新库存
+        if (save != null) {
+            List<Inventory> inventories = inventoryRepository.findByEnterpriseIdAndCategoryId(record.getEnterpriseId(), record.getCategoryId());
+            if (inventories.size() > 1) {
+                // 旧的类别还有货 更新旧的类别的库存
+                Inventory inventory = inventoryRepository.findBylengthAndWeight(record.getEnterpriseId(), record.getCategoryLength(), record.getLengthTolerancePo(), record.getLengthToleranceNe(), record.getWeight(), record.getWeightTolerance()).orElse(null);
+                if (inventory != null) {
+                    Integer counts = inventoryRepository.findCountsById(record.getEnterpriseId(), inventory.getInventoryId());
+                    // 如果更新库存后小于0，将库存置为0
+                    if (counts != null && counts + record.getCounts() > 0) {
+                        return inventoryRepository.updateInventoryById(record.getEnterpriseId(), inventory.getInventoryId(), counts + record.getCounts(), System.currentTimeMillis());
+                    } else if (counts != null && counts + record.getCounts() <= 0) {
+                        return inventoryRepository.updateInventoryById(record.getEnterpriseId(), inventory.getInventoryId(), 0, System.currentTimeMillis());
+                    }
+                }
+            } else {
+                Integer count = inventoryRepository.findCounts(record.getEnterpriseId(), record.getCategoryId());
+                if (count != null) {
+                    if (count + record.getCounts() > 0) {
+                        return inventoryRepository.updateInventory(record.getEnterpriseId(), record.getCategoryId(), count + record.getCounts(), System.currentTimeMillis());
+                    } else {
+                        return inventoryRepository.updateInventory(record.getEnterpriseId(), record.getCategoryId(), 0, System.currentTimeMillis());
+                    }
+                }
+            }
+        }
+        return 0;
     }
 
     @Override
@@ -77,6 +121,8 @@ public class RecordServiceImpl implements RecordService {
         Long end = analyticalEndTime(endTime);
         return recordRepository.findInRecordByEmployeeCard(enterpriseId, employeeCard, start, end);
     }
+
+
 
     @Override
     public Integer getOutputToday(String enterpriseId) {
@@ -148,12 +194,12 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public List<Double> getWorkEffWeek(String enterpriseId, String employeeCard) {
+    public List<String> getWorkEffWeek(String enterpriseId, String employeeCard) {
         long endTime = System.currentTimeMillis();
         long startTime = endTime - (endTime + TimeZone.getDefault().getRawOffset()) % (1000 * 3600 * 24);
-        List<Double> workEff = new ArrayList<>();
+        List<String> workEff = new ArrayList<>();
         for (int i = 0; i < WEEK; i++) {
-            workEff.add(calcWorkEff(enterpriseId, employeeCard, startTime, endTime));
+            workEff.add(String.format("%.4f", calcWorkEff(enterpriseId, employeeCard, startTime, endTime)));
             endTime = startTime - 1;
             startTime -= (1000 * 3600 * 24);
         }
@@ -233,15 +279,21 @@ public class RecordServiceImpl implements RecordService {
         for (Record record : records) {
             workload += record.getCounts();
         }
-        Long end = records.get(0).getCreateTime();
-        Long start = records.get(records.size() - 1).getCreateTime();
-        return (Double) (double) (workload / ((end - start) * 1000 * 60));
+
+        if (records.size() > 0) {
+            Long end = records.get(0).getCreateTime();
+            Long start = records.get(records.size() - 1).getCreateTime();
+            return (Double.valueOf(workload) / ((end - start) / (1000 * 60)));
+        } else {
+            return 0.0;
+        }
+
     }
 
     /**
      * 定时保存每日的产量到 redis
      */
-    @Scheduled(cron = "0 01 * * * *")
+    @Scheduled(cron = "0 01 0 * * *")
     @Async
     @Override
     public void saveOutputToday() {

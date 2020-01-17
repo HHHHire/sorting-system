@@ -44,15 +44,17 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
     Category findByEnterpriseIdAndCategoryId(String enterpriseId, String categoryId);
 
     @Modifying
+    @Transactional(rollbackFor = Exception.class)
     @Query(value = "update ss_category set " +
             "category_name=:#{#category.categoryName}, " +
-            "clength=:#{#category.cLength}, " +
+            "category_length=:#{#category.categoryLength}, " +
             "length_tolerance_po=:#{#category.lengthTolerancePo}, " +
             "length_tolerance_ne=:#{#category.lengthToleranceNe}, " +
             "weight=:#{#category.weight}, " +
             "weight_tolerance=:#{#category.weightTolerance}, " +
             "enterprise_id=:#{#category.enterpriseId}, " +
-            "device_id=:#{#category.deviceId} " +
+            "device_id=:#{#category.deviceId}, " +
+            "update_time=:#{#category.updateTime} " +
             "where category_id=:#{#category.categoryId}")
     Integer updateCategory(Category category);
 

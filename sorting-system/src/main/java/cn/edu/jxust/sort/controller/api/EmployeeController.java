@@ -121,7 +121,7 @@ public class EmployeeController extends BaseController {
     }
 
     /**
-     * 通过员工卡号删修改指定员工信息
+     * 通过员工卡号修改指定员工信息
      *
      * @param token      用户 token
      * @param employeeVO 员工实体类
