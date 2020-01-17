@@ -114,5 +114,8 @@ public interface RecordService {
      */
     List<String> getWorkEffWeek(String enterpriseIs, String employeeCard);
 
+    /**
+     * 保存每日产量
+     */
     void saveOutputToday();
 }

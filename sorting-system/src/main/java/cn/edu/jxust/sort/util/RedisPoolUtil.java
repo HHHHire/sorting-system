@@ -18,6 +18,8 @@ public class RedisPoolUtil {
         String result = null;
         try {
             jedis = RedisPool.getJedis();
+            // 选择数据库
+            jedis.select(1);
             result = jedis.set(key, value);
         } catch (Exception e) {
             e.printStackTrace();
@@ -33,6 +35,8 @@ public class RedisPoolUtil {
         Object result = null;
         try {
             jedis = RedisPool.getJedis();
+            // 选择数据库
+            jedis.select(1);
             result = SerializeUtil.unserialize(jedis.get(key));
         } catch (Exception e) {
             e.printStackTrace();

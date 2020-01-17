@@ -6,6 +6,7 @@ import cn.edu.jxust.sort.entity.vo.InventoryVO;
 import cn.edu.jxust.sort.service.InventoryService;
 import cn.edu.jxust.sort.util.ResponseUtil;
 import cn.edu.jxust.sort.util.TokenUtil;
+import cn.edu.jxust.sort.util.annotations.RequiredPermission;
 import cn.edu.jxust.sort.util.common.Const;
 import cn.edu.jxust.sort.util.enums.ResponseStatus;
 import cn.edu.jxust.sort.util.models.Response;
@@ -41,6 +42,7 @@ public class InventoryController {
      * @param size  页面大小
      * @return Response
      */
+    @RequiredPermission
     @GetMapping
     public Response getInventory(@RequestHeader("token") String token,
                                  @RequestParam(value = "categoryId", required = false) String categoryId,

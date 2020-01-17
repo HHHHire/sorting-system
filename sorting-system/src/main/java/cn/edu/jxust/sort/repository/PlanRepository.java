@@ -15,8 +15,20 @@ import java.util.Optional;
  * @description plan 持久化
  **/
 public interface PlanRepository extends JpaRepository<Plan, String> {
+    /**
+     * 查询生产规划
+     *
+     * @param enterpriseId 企业 id
+     * @return List<Plan>
+     */
     List<Plan> findByEnterpriseId(String enterpriseId);
 
+    /**
+     * 更新生产规划
+     *
+     * @param plan 生产规划实体
+     * @return Integer
+     */
     @Modifying
     @Transactional(rollbackFor = Exception.class)
     @Query(value = "update ss_plan set " +
@@ -27,5 +39,12 @@ public interface PlanRepository extends JpaRepository<Plan, String> {
             "where sort_port_id=:#{#plan.sortPortId}")
     Integer updatePlan(Plan plan);
 
+    /**
+     * 通过分拣口编号查询生产规划
+     *
+     * @param enterpriseId 企业 id
+     * @param sortPortId   分拣口编号
+     * @return Optional<Plan>
+     */
     Optional<Plan> findByEnterpriseIdAndSortPortId(String enterpriseId, String sortPortId);
 }

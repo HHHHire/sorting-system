@@ -6,6 +6,7 @@ import cn.edu.jxust.sort.service.PlanService;
 import cn.edu.jxust.sort.util.ResponseUtil;
 import cn.edu.jxust.sort.util.TokenUtil;
 import cn.edu.jxust.sort.util.UUIDUtil;
+import cn.edu.jxust.sort.util.annotations.RequiredPermission;
 import cn.edu.jxust.sort.util.enums.ResponseStatus;
 import cn.edu.jxust.sort.util.models.Response;
 import org.springframework.web.bind.annotation.*;
@@ -29,12 +30,13 @@ public class PlanController extends BaseController {
     }
 
     /**
-     * 创建分拣规划
+     * 创建分拣规划(测试用)
      *
      * @param token  用户 token
      * @param planVO 规划实体
      * @return Response
      */
+    @RequiredPermission
     @PostMapping
     public Response createPlan(@RequestHeader("token") String token,
                                @RequestBody PlanVO planVO) {
@@ -59,6 +61,7 @@ public class PlanController extends BaseController {
      * @param token 用户 token
      * @return Response
      */
+    @RequiredPermission
     @GetMapping
     public Response getPlan(@RequestHeader("token") String token) {
         String enterpriseId = tokenUtil.getClaim(token, "enterpriseId").asString();
@@ -77,6 +80,7 @@ public class PlanController extends BaseController {
      * @param sortPortId 分拣口编号
      * @return Response
      */
+    @RequiredPermission
     @GetMapping("/{sortPortId}")
     public Response getPlanBySortPortId(@RequestHeader("token") String token,
                                         @PathVariable String sortPortId) {
@@ -96,6 +100,7 @@ public class PlanController extends BaseController {
      * @param planVO 分拣规划实体
      * @return Response
      */
+    @RequiredPermission
     @PutMapping
     public Response updatePlan(@RequestHeader("token") String token,
                                @RequestBody PlanVO planVO) {

@@ -71,6 +71,7 @@ public class CategoryController extends BaseController {
      * @param categoryId 分类编号
      * @return Response
      */
+    @RequiredPermission
     @GetMapping("/{categoryId}")
     public Response getCategoryById(@RequestHeader("token") String token,
                                     @PathVariable String categoryId) {
@@ -79,20 +80,26 @@ public class CategoryController extends BaseController {
         if (category != null) {
             return ResponseUtil.responseWithData(ResponseStatus.SUCCESS,
                     CategoryVO.builder()
-                    .categoryId(categoryId)
-                    .categoryName(category.getCategoryName())
-                    .categoryLength(category.getCategoryLength())
-                    .lengthTolerancePo(category.getLengthTolerancePo())
-                    .lengthToleranceNe(category.getLengthToleranceNe())
-                    .weight(category.getWeight())
-                    .weightTolerance(category.getWeightTolerance()).build());
+                            .categoryId(categoryId)
+                            .categoryName(category.getCategoryName())
+                            .categoryLength(category.getCategoryLength())
+                            .lengthTolerancePo(category.getLengthTolerancePo())
+                            .lengthToleranceNe(category.getLengthToleranceNe())
+                            .weight(category.getWeight())
+                            .weightTolerance(category.getWeightTolerance()).build());
         } else {
             return ResponseUtil.responseWithoutData(ResponseStatus.NOT_FOUND);
         }
     }
 
-    /********************************************* 接口测试用 ***************************************************/
-
+    /**
+     * 创建分类(测试用)
+     *
+     * @param token      用户 token
+     * @param categoryVO 分类实体
+     * @return Response
+     */
+    @RequiredPermission
     @PostMapping
     public Response createCategory(@RequestHeader("token") String token,
                                    @RequestBody CategoryVO categoryVO) {
@@ -113,6 +120,14 @@ public class CategoryController extends BaseController {
         }
     }
 
+    /**
+     * 更新分类(测试用)
+     *
+     * @param token      用户 token
+     * @param categoryVO 分类实体
+     * @return Response
+     */
+    @RequiredPermission
     @PutMapping
     public Response updateCategory(@RequestHeader("token") String token,
                                    @RequestBody CategoryVO categoryVO) {
@@ -134,6 +149,14 @@ public class CategoryController extends BaseController {
         }
     }
 
+    /**
+     * 删除分类信息
+     *
+     * @param token      用户 token
+     * @param categoryId 分类 id
+     * @return Response
+     */
+    @RequiredPermission
     @DeleteMapping("/{categoryId}")
     public Response deleteCategory(@RequestHeader("token") String token,
                                    @PathVariable String categoryId) {
