@@ -5,13 +5,13 @@ $("#load-warehouse").click(function () {
     localStorage.setItem("sortCurrentPage", "warehouse");
     $("#load-page-area").load("warehouse.html");
     $(this).attr("class", "nav-item active");
-    $("#load-stock").attr("class", "nav-item");
     $("#load-category").attr("class", "nav-item");
     $("#load-setting").attr("class", "nav-item");
+    $("#load-stock").attr("class", "nav-item");
 });
 
 /**
- * 加载库存信息页面 该页面主要用来展示出/如库记录
+ * 加载库存界面
  */
 $("#load-stock").click(function () {
     localStorage.setItem("sortCurrentPage", "stock");
@@ -29,9 +29,9 @@ $("#load-category").click(function () {
     localStorage.setItem("sortCurrentPage", "category");
     $("#load-page-area").load("category.html");
     $("#load-warehouse").attr("class", "nav-item");
-    $("#load-stock").attr("class", "nav-item");
     $(this).attr("class", "nav-item active");
     $("#load-setting").attr("class", "nav-item");
+    $("#load-stock").attr("class", "nav-item");
 });
 
 /**
@@ -41,9 +41,9 @@ $("#load-setting").click(function () {
     localStorage.setItem("sortCurrentPage", "setting");
     $("#load-page-area").load("setting.html");
     $("#load-warehouse").attr("class", "nav-item");
-    $("#load-stock").attr("class", "nav-item");
     $("#load-category").attr("class", "nav-item");
     $(this).attr("class", "nav-item active");
+    $("#load-stock").attr("class", "nav-item");
 });
 
 /**

@@ -9,33 +9,33 @@ var statisticsChart = new Chart(ctx, {
         labels: ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"],
         datasets: [{
             label: "小明",
-            borderColor: '#f3545d',
-            pointBackgroundColor: 'rgba(243, 84, 93, 0.2)',
+            borderColor: '#1acc7e',
+            pointBackgroundColor: 'rgba(26, 204, 126, 0.2)',
             pointRadius: 0,
-            backgroundColor: 'rgba(243, 84, 93, 0.1)',
-            legendColor: '#f3545d',
+            backgroundColor: 'rgba(26, 204, 126, 0.1)',
+            legendColor: '#1acc7e',
             fill: true,
-            borderWidth: 2,
+            borderWidth: 3,
             data: [154, 184, 175, 203, 210, 231, 240]
         }, {
             label: "小强",
-            borderColor: '#fdaf4b',
-            pointBackgroundColor: 'rgba(253, 175, 75, 0.2)',
+            borderColor: '#f55480',
+            pointBackgroundColor: 'rgba(245, 84, 128, 0.2)',
             pointRadius: 0,
-            backgroundColor: 'rgba(253, 175, 75, 0.1)',
-            legendColor: '#fdaf4b',
+            backgroundColor: 'rgba(245, 84, 128, 0.1)',
+            legendColor: '#f55480',
             fill: true,
-            borderWidth: 2,
+            borderWidth: 3,
             data: [256, 230, 245, 287, 240, 250, 230]
         }, {
             label: "小张",
-            borderColor: '#177dff',
-            pointBackgroundColor: 'rgba(23, 125, 255, 0.2)',
+            borderColor: '#5e95fc',
+            pointBackgroundColor: 'rgba(94, 149, 252, 0.2)',
             pointRadius: 0,
-            backgroundColor: 'rgba(23, 125, 255, 0.1)',
-            legendColor: '#177dff',
+            backgroundColor: 'rgba(94, 149, 252, 0.1)',
+            legendColor: '#5e95fc',
             fill: true,
-            borderWidth: 2,
+            borderWidth: 3,
             data: [542, 480, 430, 550, 530, 453, 380]
         }]
     },
@@ -60,7 +60,7 @@ var statisticsChart = new Chart(ctx, {
         scales: {
             yAxes: [{
                 ticks: {
-                    fontColor: "rgba(0,0,0,0.5)",
+                    fontColor: "rgba(255,255,255,0.5)",
                     fontStyle: "500",
                     beginAtZero: false,
                     maxTicksLimit: 5,
@@ -77,7 +77,7 @@ var statisticsChart = new Chart(ctx, {
                 },
                 ticks: {
                     padding: 20,
-                    fontColor: "rgba(0,0,0,0.5)",
+                    fontColor: "rgba(255,255,255,0.5)",
                     fontStyle: "500"
                 }
             }]
@@ -118,13 +118,13 @@ new Chart(ctx2, {
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         datasets: [{
             label: "当月数量",
-            borderColor: '#177dff',
-            pointBackgroundColor: 'rgba(23, 125, 255, 1)',
+            borderColor: '#42e58e',
+            pointBackgroundColor: 'rgba(66, 229, 142, 1)',
             pointRadius: 0,
-            backgroundColor: 'rgba(23, 125, 255, 0.1)',
-            legendColor: '#177dff',
+            backgroundColor: 'rgba(66, 229, 142, 0.1)',
+            legendColor: '#42e58e',
             fill: true,
-            borderWidth: 2,
+            borderWidth: 3,
             data: [542, 480, 430, 550, 530, 453, 380, 434, 568, 610, 700, 900]
         }]
     },
@@ -149,7 +149,7 @@ new Chart(ctx2, {
         scales: {
             yAxes: [{
                 ticks: {
-                    fontColor: "rgba(0,0,0,0.5)",
+                    fontColor: "rgba(255, 255, 255 ,0.5)",
                     fontStyle: "500",
                     beginAtZero: false,
                     maxTicksLimit: 5,
@@ -166,7 +166,7 @@ new Chart(ctx2, {
                 },
                 ticks: {
                     padding: 20,
-                    fontColor: "rgba(0,0,0,0.5)",
+                    fontColor: "rgba(255, 255, 255 ,0.5)",
                     fontStyle: "500"
                 }
             }]

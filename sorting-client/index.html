@@ -39,7 +39,7 @@
     <!--
         Tip 1: You can change the background color of the main header using: data-background-color="blue | purple | light-blue | green | orange | red"
     -->
-    <div class="main-header" data-background-color="purple">
+    <div class="main-header bg-dark" data-background-color="">
         <!-- Logo Header -->
         <div class="logo-header">
             <a href="index.html" class="logo">
@@ -62,7 +62,7 @@
         <!-- End Logo Header -->
 
         <!-- Navbar Header -->
-        <nav class="navbar navbar-header navbar-expand-lg">
+        <nav class="navbar navbar-header navbar-expand-lg bg-dark">
 
             <div class="container-fluid">
                 <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
@@ -73,19 +73,22 @@
                                 <i class="fa fa-user-circle fa-3x"></i>
                             </div>
                         </a>
-                        <ul class="dropdown-menu dropdown-user animated fadeIn">
+                        <ul class="dropdown-menu dropdown-user animated fadeIn bg-default">
                             <li>
                                 <div class="user-box">
-                                    <div class="u-text">
+                                    <div class="u-text text-white">
                                         <h4>Hizrian</h4>
                                     </div>
                                 </div>
                             </li>
                             <li>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#"><i class="fa fa-user"> 个人信息</i></a>
-                                <a class="dropdown-item" href="#" id="logout-link"><i class="fa fa-sign-in-alt"></i>
-                                    退出登录</a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-user text-white"> 个人信息</i>
+                                </a>
+                                <a class="dropdown-item" href="#" id="logout-link">
+                                    <i class="fa fa-sign-in-alt text-white"> 退出登录</i>
+                                </a>
                             </li>
                         </ul>
                     </li>
@@ -97,7 +100,7 @@
     </div>
 
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar bg-dark">
 
         <div class="sidebar-wrapper scrollbar-inner">
             <div class="sidebar-content">
@@ -132,14 +135,16 @@
     </div>
     <!-- End Sidebar -->
 
-    <div class="main-panel">
+    <div class="main-panel bg-default">
         <div class="content">
-            <div class="page-inner" id="load-page-area">
+            <div class="page-inner bg-default" id="load-page-area">
                 <!-- 页面加载区域 -->
                 <h2>页面加载区域</h2>
             </div>
         </div>
-        Copyright © 2019 <a href="#" target="_blank" title="江西先进同产业研究院">江西先进同产业研究院</a>
+        <div class="bg-default">
+            <span class="text-white">Copyright © 2019 </span><a href="#" target="_blank" title="江西先进同产业研究院">江西先进同产业研究院</a>
+        </div>
     </div>
 
     <!-- 背景颜色设置 -->
@@ -225,8 +230,8 @@
     let token; //用户token
 
     Notiflix.Report.Init({
-        fontFamily:"Consolas",
-        useGoogleFont:false,
+        fontFamily: "Consolas",
+        useGoogleFont: false,
         backgroundColor: "#ffffff",
         svgSize: "0px",
         success: {
